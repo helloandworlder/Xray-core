@@ -2,17 +2,25 @@ package conf
 
 import (
 	"github.com/xtls/xray-core/app/policy"
+	"github.com/xtls/xray-core/common/ratelimit"
 )
 
+// RateLimitConfig is the JSON config for rate limiting.
+type RateLimitConfig struct {
+	Uplink   string `json:"uplink"`
+	Downlink string `json:"downlink"`
+}
+
 type Policy struct {
-	Handshake         *uint32 `json:"handshake"`
-	ConnectionIdle    *uint32 `json:"connIdle"`
-	UplinkOnly        *uint32 `json:"uplinkOnly"`
-	DownlinkOnly      *uint32 `json:"downlinkOnly"`
-	StatsUserUplink   bool    `json:"statsUserUplink"`
-	StatsUserDownlink bool    `json:"statsUserDownlink"`
-	StatsUserOnline   bool    `json:"statsUserOnline"`
-	BufferSize        *int32  `json:"bufferSize"`
+	Handshake         *uint32          `json:"handshake"`
+	ConnectionIdle    *uint32          `json:"connIdle"`
+	UplinkOnly        *uint32          `json:"uplinkOnly"`
+	DownlinkOnly      *uint32          `json:"downlinkOnly"`
+	StatsUserUplink   bool             `json:"statsUserUplink"`
+	StatsUserDownlink bool             `json:"statsUserDownlink"`
+	StatsUserOnline   bool             `json:"statsUserOnline"`
+	BufferSize        *int32           `json:"bufferSize"`
+	RateLimit         *RateLimitConfig `json:"rateLimit"`
 }
 
 func (t *Policy) Build() (*policy.Policy, error) {
@@ -46,6 +54,13 @@ func (t *Policy) Build() (*policy.Policy, error) {
 		}
 		p.Buffer = &policy.Policy_Buffer{
 			Connection: bs,
+		}
+	}
+
+	if t.RateLimit != nil {
+		p.RateLimit = &policy.Policy_RateLimit{
+			Uplink:   ratelimit.ParseRate(t.RateLimit.Uplink),
+			Downlink: ratelimit.ParseRate(t.RateLimit.Downlink),
 		}
 	}
 

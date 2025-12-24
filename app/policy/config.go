@@ -58,6 +58,12 @@ func (p *Policy) overrideWith(another *Policy) {
 			Connection: another.Buffer.Connection,
 		}
 	}
+	if another.RateLimit != nil {
+		p.RateLimit = &Policy_RateLimit{
+			Uplink:   another.RateLimit.Uplink,
+			Downlink: another.RateLimit.Downlink,
+		}
+	}
 }
 
 // ToCorePolicy converts this Policy to policy.Session.
@@ -77,6 +83,10 @@ func (p *Policy) ToCorePolicy() policy.Session {
 	}
 	if p.Buffer != nil {
 		cp.Buffer.PerConnection = p.Buffer.Connection
+	}
+	if p.RateLimit != nil {
+		cp.RateLimit.Uplink = p.RateLimit.Uplink
+		cp.RateLimit.Downlink = p.RateLimit.Downlink
 	}
 	return cp
 }

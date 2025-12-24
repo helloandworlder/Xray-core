@@ -37,6 +37,14 @@ type Buffer struct {
 	PerConnection int32
 }
 
+// RateLimit contains settings for rate limiting.
+type RateLimit struct {
+	// Uplink rate limit in bytes per second. 0 for unlimited.
+	Uplink int64
+	// Downlink rate limit in bytes per second. 0 for unlimited.
+	Downlink int64
+}
+
 // SystemStats contains stat policy settings on system level.
 type SystemStats struct {
 	// Whether or not to enable stat counter for uplink traffic in inbound handlers.
@@ -57,9 +65,10 @@ type System struct {
 
 // Session is session based settings for controlling Xray requests. It contains various settings (or limits) that may differ for different users in the context.
 type Session struct {
-	Timeouts Timeout // Timeout settings
-	Stats    Stats
-	Buffer   Buffer
+	Timeouts  Timeout // Timeout settings
+	Stats     Stats
+	Buffer    Buffer
+	RateLimit RateLimit
 }
 
 // Manager is a feature that provides Policy for the given user by its id or level.

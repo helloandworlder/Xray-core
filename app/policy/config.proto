@@ -30,9 +30,18 @@ message Policy {
     int32 connection = 1;
   }
 
+  // RateLimit is a message for rate limiting settings.
+  message RateLimit {
+    // Uplink rate limit in bytes per second. 0 for unlimited.
+    int64 uplink = 1;
+    // Downlink rate limit in bytes per second. 0 for unlimited.
+    int64 downlink = 2;
+  }
+
   Timeout timeout = 1;
   Stats stats = 2;
   Buffer buffer = 3;
+  RateLimit rate_limit = 4;
 }
 
 message SystemPolicy {

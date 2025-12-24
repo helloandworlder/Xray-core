@@ -13,6 +13,7 @@ import (
 	"github.com/xtls/xray-core/common/log"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/common/protocol"
+	"github.com/xtls/xray-core/common/ratelimit"
 	"github.com/xtls/xray-core/common/session"
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/features/dns"
@@ -193,6 +194,45 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 		}
 	}
 
+	// Apply rate limiting
+	inboundTag := ""
+	userEmail := ""
+	var userLevel uint32 = 0
+	if sessionInbound != nil {
+		inboundTag = sessionInbound.Tag
+		if user != nil {
+			userEmail = user.Email
+			userLevel = user.Level
+		}
+	}
+
+	// Register level rate limit from policy (always apply, even for anonymous users)
+	p := d.policy.ForLevel(userLevel)
+	if p.RateLimit.Uplink > 0 || p.RateLimit.Downlink > 0 {
+		ratelimit.GetManager().SetLevel(userLevel, p.RateLimit.Uplink, p.RateLimit.Downlink)
+		errors.LogDebug(ctx, "Rate limit set for level ", userLevel, ": uplink=", p.RateLimit.Uplink, " downlink=", p.RateLimit.Downlink)
+	}
+
+	// Get uplink limiters (client -> server direction, written to inboundLink.Writer)
+	uplinkLimiters := ratelimit.GetManager().GetUplinkLimiters(inboundTag, "", userEmail, userLevel)
+	errors.LogDebug(ctx, "Uplink limiters count: ", len(uplinkLimiters))
+	if len(uplinkLimiters) > 0 {
+		if rlw := ratelimit.NewRateLimitedWriter(inboundLink.Writer, ctx, uplinkLimiters...); rlw != nil {
+			inboundLink.Writer = rlw
+			errors.LogDebug(ctx, "Applied uplink rate limiting")
+		}
+	}
+
+	// Get downlink limiters (server -> client direction, written to outboundLink.Writer)
+	downlinkLimiters := ratelimit.GetManager().GetDownlinkLimiters(inboundTag, "", userEmail, userLevel)
+	errors.LogDebug(ctx, "Downlink limiters count: ", len(downlinkLimiters))
+	if len(downlinkLimiters) > 0 {
+		if rlw := ratelimit.NewRateLimitedWriter(outboundLink.Writer, ctx, downlinkLimiters...); rlw != nil {
+			outboundLink.Writer = rlw
+			errors.LogDebug(ctx, "Applied downlink rate limiting")
+		}
+	}
+
 	return inboundLink, outboundLink
 }
 
@@ -231,6 +271,40 @@ func (d *DefaultDispatcher) WrapLink(ctx context.Context, link *transport.Link) 
 				// log Online user with ips
 				// errors.LogDebug(ctx, "user>>>" + user.Email + ">>>online", om.Count(), om.List())
 			}
+		}
+	}
+
+	// Apply rate limiting for DispatchLink
+	inboundTag := ""
+	userEmail := ""
+	var userLevel uint32 = 0
+	if sessionInbound != nil {
+		inboundTag = sessionInbound.Tag
+		if user != nil {
+			userEmail = user.Email
+			userLevel = user.Level
+		}
+	}
+
+	// Register level rate limit from policy
+	p := d.policy.ForLevel(userLevel)
+	if p.RateLimit.Uplink > 0 || p.RateLimit.Downlink > 0 {
+		ratelimit.GetManager().SetLevel(userLevel, p.RateLimit.Uplink, p.RateLimit.Downlink)
+	}
+
+	// Get uplink limiters (client -> server, applied to Reader)
+	uplinkLimiters := ratelimit.GetManager().GetUplinkLimiters(inboundTag, "", userEmail, userLevel)
+	if len(uplinkLimiters) > 0 {
+		if rlr := ratelimit.NewRateLimitedReader(link.Reader, ctx, uplinkLimiters...); rlr != nil {
+			link.Reader = rlr
+		}
+	}
+
+	// Get downlink limiters (server -> client, applied to Writer)
+	downlinkLimiters := ratelimit.GetManager().GetDownlinkLimiters(inboundTag, "", userEmail, userLevel)
+	if len(downlinkLimiters) > 0 {
+		if rlw := ratelimit.NewRateLimitedWriter(link.Writer, ctx, downlinkLimiters...); rlw != nil {
+			link.Writer = rlw
 		}
 	}
 
