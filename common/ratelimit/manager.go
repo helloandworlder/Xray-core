@@ -58,6 +58,13 @@ func (m *Manager) SetUser(email string, uplink, downlink int64) {
 	}
 }
 
+// RemoveUser removes rate limiter for a specific user (by email).
+func (m *Manager) RemoveUser(email string) {
+	if email != "" {
+		m.user.Delete(email)
+	}
+}
+
 // GetUplinkLimiters returns all applicable uplink limiters for a connection.
 func (m *Manager) GetUplinkLimiters(inboundTag, outboundTag, userEmail string, userLevel uint32) []*rate.Limiter {
 	var limiters []*rate.Limiter

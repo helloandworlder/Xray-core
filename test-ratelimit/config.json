@@ -1,0 +1,25 @@
+{
+  "log": { "loglevel": "warning" },
+  "policy": {
+    "levels": {
+      "0": {
+        "rateLimit": {
+          "uplink": "10mbps",
+          "downlink": "10mbps"
+        }
+      }
+    }
+  },
+  "inbounds": [{
+    "tag": "socks-in",
+    "port": 10808,
+    "listen": "0.0.0.0",
+    "protocol": "socks",
+    "settings": { "auth": "noauth", "udp": true }
+  }],
+  "outbounds": [{
+    "tag": "direct",
+    "protocol": "freedom",
+    "settings": {}
+  }]
+}

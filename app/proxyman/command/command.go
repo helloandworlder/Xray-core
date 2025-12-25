@@ -7,6 +7,7 @@ import (
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/protocol"
+	"github.com/xtls/xray-core/common/ratelimit"
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/features/inbound"
 	"github.com/xtls/xray-core/features/outbound"
@@ -202,6 +203,24 @@ func (s *handlerServer) ListOutbounds(ctx context.Context, request *ListOutbound
 		})
 	}
 	return response, nil
+}
+
+// SetUserRateLimit sets rate limit for a specific user by email.
+func (s *handlerServer) SetUserRateLimit(ctx context.Context, request *SetUserRateLimitRequest) (*SetUserRateLimitResponse, error) {
+	if request.Email == "" {
+		return nil, errors.New("email is required")
+	}
+	ratelimit.GetManager().SetUser(request.Email, request.Uplink, request.Downlink)
+	return &SetUserRateLimitResponse{}, nil
+}
+
+// RemoveUserRateLimit removes rate limit for a specific user.
+func (s *handlerServer) RemoveUserRateLimit(ctx context.Context, request *RemoveUserRateLimitRequest) (*RemoveUserRateLimitResponse, error) {
+	if request.Email == "" {
+		return nil, errors.New("email is required")
+	}
+	ratelimit.GetManager().RemoveUser(request.Email)
+	return &RemoveUserRateLimitResponse{}, nil
 }
 
 func (s *handlerServer) mustEmbedUnimplementedHandlerServiceServer() {}

@@ -103,6 +103,27 @@ service HandlerService {
   rpc AlterOutbound(AlterOutboundRequest) returns (AlterOutboundResponse) {}
 
   rpc ListOutbounds(ListOutboundsRequest) returns (ListOutboundsResponse) {}
+
+  // Rate limiting APIs
+  rpc SetUserRateLimit(SetUserRateLimitRequest) returns (SetUserRateLimitResponse) {}
+
+  rpc RemoveUserRateLimit(RemoveUserRateLimitRequest) returns (RemoveUserRateLimitResponse) {}
 }
+
+// SetUserRateLimitRequest sets rate limit for a specific user by email.
+message SetUserRateLimitRequest {
+  string email = 1;
+  int64 uplink = 2;   // bytes per second, 0 for unlimited
+  int64 downlink = 3; // bytes per second, 0 for unlimited
+}
+
+message SetUserRateLimitResponse {}
+
+// RemoveUserRateLimitRequest removes rate limit for a specific user.
+message RemoveUserRateLimitRequest {
+  string email = 1;
+}
+
+message RemoveUserRateLimitResponse {}
 
 message Config {}
