@@ -11,9 +11,12 @@ import (
 	"github.com/xtls/xray-core/app/stats"
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/net"
+	"github.com/xtls/xray-core/common/protocol"
+	"github.com/xtls/xray-core/common/ratelimit"
 	"github.com/xtls/xray-core/common/serial"
 	core "github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/transport/internet"
+	"google.golang.org/protobuf/proto"
 )
 
 var (
@@ -187,6 +190,9 @@ func (c *InboundDetourConfig) Build() (*core.InboundHandlerConfig, error) {
 	if err != nil {
 		return nil, errors.New("failed to build inbound handler for protocol ", c.Protocol).Base(err)
 	}
+
+	// Register user rate limits from config (unified for all protocols)
+	registerUserRateLimits(ts)
 
 	return &core.InboundHandlerConfig{
 		Tag:              c.Tag,
@@ -607,4 +613,51 @@ func ParseSendThough(Addr *string) *Address {
 	var addr Address
 	addr.Address = net.ParseAddress(strings.Split(*Addr, "/")[0])
 	return &addr
+}
+
+// registerUserRateLimits registers user rate limits from inbound config to the global rate limit manager.
+// This function works for all protocols that use protocol.User (vless, trojan, shadowsocks, vmess, http, socks, etc.)
+func registerUserRateLimits(config proto.Message) {
+	// Use reflection to find Users field in the config
+	// All inbound configs that support users have a Users field of type []*protocol.User
+
+	// Try to extract users using type assertion for known config types
+	var users []*protocol.User
+
+	// Use proto reflection to get the Users field
+	msg := config.ProtoReflect()
+	fields := msg.Descriptor().Fields()
+
+	// Look for "users" or "clients" field
+	for i := 0; i < fields.Len(); i++ {
+		field := fields.Get(i)
+		fieldName := string(field.Name())
+
+		if fieldName == "users" || fieldName == "clients" {
+			value := msg.Get(field)
+			if value.IsValid() && field.IsList() {
+				list := value.List()
+				for j := 0; j < list.Len(); j++ {
+					item := list.Get(j)
+					if item.Message().IsValid() {
+						// Try to convert to *protocol.User
+						if user, ok := item.Message().Interface().(*protocol.User); ok {
+							users = append(users, user)
+						}
+					}
+				}
+			}
+			break
+		}
+	}
+
+	// Register rate limits for all users
+	for _, user := range users {
+		if user.RateLimit != nil && user.Email != "" {
+			if user.RateLimit.Uplink > 0 || user.RateLimit.Downlink > 0 {
+				ratelimit.GetManager().SetUser(user.Email, user.RateLimit.Uplink, user.RateLimit.Downlink)
+				errors.LogInfo(context.Background(), "Registered rate limit for user ", user.Email, ": uplink=", user.RateLimit.Uplink, " downlink=", user.RateLimit.Downlink)
+			}
+		}
+	}
 }

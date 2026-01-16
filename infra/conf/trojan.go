@@ -101,10 +101,11 @@ type TrojanInboundFallback struct {
 
 // TrojanUserConfig is user configuration
 type TrojanUserConfig struct {
-	Password string `json:"password"`
-	Level    byte   `json:"level"`
-	Email    string `json:"email"`
-	Flow     string `json:"flow"`
+	Password  string               `json:"password"`
+	Level     byte                 `json:"level"`
+	Email     string               `json:"email"`
+	Flow      string               `json:"flow"`
+	RateLimit *UserRateLimitConfig `json:"rateLimit"`
 }
 
 // TrojanServerConfig is Inbound configuration
@@ -124,13 +125,23 @@ func (c *TrojanServerConfig) Build() (proto.Message, error) {
 			return nil, errors.PrintRemovedFeatureError(`Flow for Trojan`, ``)
 		}
 
-		config.Users[idx] = &protocol.User{
+		user := &protocol.User{
 			Level: uint32(rawUser.Level),
 			Email: rawUser.Email,
 			Account: serial.ToTypedMessage(&trojan.Account{
 				Password: rawUser.Password,
 			}),
 		}
+
+		// Add rate limit if present
+		if rawUser.RateLimit != nil {
+			user.RateLimit = &protocol.RateLimit{
+				Uplink:   rawUser.RateLimit.Uplink,
+				Downlink: rawUser.RateLimit.Downlink,
+			}
+		}
+
+		config.Users[idx] = user
 	}
 
 	for _, fb := range c.Fallbacks {

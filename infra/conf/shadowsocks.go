@@ -31,12 +31,13 @@ func cipherFromString(c string) shadowsocks.CipherType {
 }
 
 type ShadowsocksUserConfig struct {
-	Cipher   string   `json:"method"`
-	Password string   `json:"password"`
-	Level    byte     `json:"level"`
-	Email    string   `json:"email"`
-	Address  *Address `json:"address"`
-	Port     uint16   `json:"port"`
+	Cipher    string               `json:"method"`
+	Password  string               `json:"password"`
+	Level     byte                 `json:"level"`
+	Email     string               `json:"email"`
+	Address   *Address             `json:"address"`
+	Port      uint16               `json:"port"`
+	RateLimit *UserRateLimitConfig `json:"rateLimit"`
 }
 
 type ShadowsocksServerConfig struct {
@@ -71,11 +72,22 @@ func (v *ShadowsocksServerConfig) Build() (proto.Message, error) {
 				account.CipherType > shadowsocks.CipherType_XCHACHA20_POLY1305 {
 				return nil, errors.New("unsupported cipher method: ", user.Cipher)
 			}
-			config.Users = append(config.Users, &protocol.User{
+
+			protoUser := &protocol.User{
 				Email:   user.Email,
 				Level:   uint32(user.Level),
 				Account: serial.ToTypedMessage(account),
-			})
+			}
+
+			// Add rate limit if present
+			if user.RateLimit != nil {
+				protoUser.RateLimit = &protocol.RateLimit{
+					Uplink:   user.RateLimit.Uplink,
+					Downlink: user.RateLimit.Downlink,
+				}
+			}
+
+			config.Users = append(config.Users, protoUser)
 		}
 	} else {
 		account := &shadowsocks.Account{

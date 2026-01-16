@@ -20,6 +20,19 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// UserRateLimitConfig is the JSON config for per-user rate limiting.
+type UserRateLimitConfig struct {
+	Uplink   int64 `json:"uplink"`   // bytes per second
+	Downlink int64 `json:"downlink"` // bytes per second
+}
+
+// VLessUserConfig is a helper struct to parse user JSON with rate limit.
+type VLessUserConfig struct {
+	Level     uint32               `json:"level"`
+	Email     string               `json:"email"`
+	RateLimit *UserRateLimitConfig `json:"rateLimit"`
+}
+
 type VLessInboundFallback struct {
 	Name string          `json:"name"`
 	Alpn string          `json:"alpn"`
@@ -56,6 +69,15 @@ func (c *VLessInboundConfig) Build() (proto.Message, error) {
 		account := new(vless.Account)
 		if err := json.Unmarshal(rawUser, account); err != nil {
 			return nil, errors.New(`VLESS clients: invalid user`).Base(err)
+		}
+
+		// Parse rate limit if present
+		var userConfig VLessUserConfig
+		if err := json.Unmarshal(rawUser, &userConfig); err == nil && userConfig.RateLimit != nil {
+			user.RateLimit = &protocol.RateLimit{
+				Uplink:   userConfig.RateLimit.Uplink,
+				Downlink: userConfig.RateLimit.Downlink,
+			}
 		}
 
 		u, err := uuid.ParseString(account.Id)
