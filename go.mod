@@ -11,7 +11,7 @@ require (
 	github.com/miekg/dns v1.1.69
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pires/go-proxyproto v0.8.1
-	github.com/quic-go/quic-go v0.58.0
+	github.com/quic-go/quic-go v0.59.0
 	github.com/refraction-networking/utls v1.8.1
 	github.com/sagernet/sing v0.5.1
 	github.com/sagernet/sing-shadowsocks v0.2.7
@@ -25,6 +25,7 @@ require (
 	golang.org/x/net v0.48.0
 	golang.org/x/sync v0.19.0
 	golang.org/x/sys v0.39.0
+	golang.org/x/time v0.14.0
 	golang.zx2c4.com/wireguard v0.0.0-20231211153847-12269c276173
 	google.golang.org/grpc v1.77.0
 	google.golang.org/protobuf v1.36.11
@@ -48,7 +49,6 @@ require (
 	github.com/vishvananda/netns v0.0.5 // indirect
 	golang.org/x/mod v0.30.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
-	golang.org/x/time v0.14.0 // indirect
 	golang.org/x/tools v0.39.0 // indirect
 	golang.zx2c4.com/wintun v0.0.0-20230126152724-0fa3db229ce2 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251022142026-3a174f9686a8 // indirect
