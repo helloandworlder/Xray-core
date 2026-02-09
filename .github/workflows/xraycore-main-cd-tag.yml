@@ -1,0 +1,141 @@
+name: xraycore-main-cd-tag
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  IMAGE_REPO: ghcr.io/${{ github.repository_owner }}/xray-core
+
+jobs:
+  build-linux-binaries:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        goarch: [amd64, arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: Build xray linux binaries
+        run: |
+          mkdir -p dist
+          COMMIT=$(git describe --always --dirty)
+          CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.goarch }} \
+            go build -trimpath -buildvcs=false \
+            -ldflags="-X github.com/xtls/xray-core/core.build=${COMMIT} -s -w -buildid=" \
+            -o dist/xray-linux-${{ matrix.goarch }} ./main
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xray-linux-${{ matrix.goarch }}
+          path: dist/xray-linux-${{ matrix.goarch }}
+          retention-days: 14
+
+  publish-main-image:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push main image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_REPO }}:main
+            ${{ env.IMAGE_REPO }}:sha-${{ github.sha }}
+
+  publish-tag-image:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive tags
+        run: |
+          echo "TAG_NO_V=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Build and push tag image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_REPO }}:${{ github.ref_name }}
+            ${{ env.IMAGE_REPO }}:${{ env.TAG_NO_V }}
+
+  release-tag:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build-linux-binaries]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: xray-linux-*
+          path: dist
+          merge-multiple: true
+
+      - name: Generate SHA256SUMS
+        run: |
+          cd dist
+          sha256sum xray-linux-* > SHA256SUMS
+
+      - name: Publish GitHub release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/xray-linux-amd64
+            dist/xray-linux-arm64
+            dist/SHA256SUMS
+          generate_release_notes: true
