@@ -9,6 +9,7 @@ import (
 	handlerservice "github.com/xtls/xray-core/app/proxyman/command"
 	routerservice "github.com/xtls/xray-core/app/router/command"
 	statsservice "github.com/xtls/xray-core/app/stats/command"
+	userratelimitservice "github.com/xtls/xray-core/app/userratelimit/command"
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/serial"
 )
@@ -39,6 +40,8 @@ func (c *APIConfig) Build() (*commander.Config, error) {
 			services = append(services, serial.ToTypedMessage(&observatoryservice.Config{}))
 		case "routingservice":
 			services = append(services, serial.ToTypedMessage(&routerservice.Config{}))
+		case "userratelimitservice", "userrateservice":
+			services = append(services, serial.ToTypedMessage(&userratelimitservice.Config{}))
 		}
 	}
 

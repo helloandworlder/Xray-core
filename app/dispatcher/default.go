@@ -191,6 +191,13 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 
 			}
 		}
+		uplinkBps, downlinkBps := resolveUserRateLimit(user.Email)
+		if uplinkBps > 0 {
+			inboundLink.Writer = newRateLimitWriter(inboundLink.Writer, uplinkBps)
+		}
+		if downlinkBps > 0 {
+			outboundLink.Writer = newRateLimitWriter(outboundLink.Writer, downlinkBps)
+		}
 	}
 
 	return inboundLink, outboundLink
@@ -231,6 +238,13 @@ func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager st
 				// log Online user with ips
 				// errors.LogDebug(ctx, "user>>>" + user.Email + ">>>online", om.Count(), om.List())
 			}
+		}
+		uplinkBps, downlinkBps := resolveUserRateLimit(user.Email)
+		if uplinkBps > 0 {
+			link.Reader = newRateLimitReader(link.Reader, uplinkBps)
+		}
+		if downlinkBps > 0 {
+			link.Writer = newRateLimitWriter(link.Writer, downlinkBps)
 		}
 	}
 
