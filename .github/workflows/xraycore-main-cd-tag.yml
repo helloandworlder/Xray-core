@@ -40,7 +40,7 @@ jobs:
             -o dist/xray-linux-${{ matrix.goarch }} ./main
 
       - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: xray-linux-${{ matrix.goarch }}
           path: dist/xray-linux-${{ matrix.goarch }}
