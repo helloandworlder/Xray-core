@@ -1,0 +1,68 @@
+name: panel-main-ci
+
+on:
+  push:
+    paths:
+      - "panel/**"
+      - ".github/workflows/panel-main-ci.yml"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "panel/**"
+      - ".github/workflows/panel-main-ci.yml"
+
+concurrency:
+  group: panel-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: panel
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: panel/go.mod
+          check-latest: true
+
+      - name: Download Go modules
+        run: go mod download
+
+      - name: Go vet
+        run: go vet ./...
+
+      - name: Backend and agent tests
+        run: go test ./...
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: panel/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: panel/web/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
