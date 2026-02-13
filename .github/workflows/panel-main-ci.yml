@@ -2,6 +2,7 @@ name: panel-main-ci
 
 on:
   push:
+    branches: [main]
     paths:
       - "panel/**"
       - ".github/workflows/panel-main-ci.yml"
@@ -16,7 +17,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  panel-presence:
+    runs-on: ubuntu-latest
+    outputs:
+      has_panel: ${{ steps.check.outputs.has_panel }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect panel workspace
+        id: check
+        run: |
+          if [ -f panel/go.mod ] && [ -f panel/web/package.json ]; then
+            echo "has_panel=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_panel=false" >> "$GITHUB_OUTPUT"
+          fi
+
   backend-test:
+    needs: panel-presence
+    if: needs.panel-presence.outputs.has_panel == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,6 +61,8 @@ jobs:
         run: go test ./...
 
   frontend-build:
+    needs: panel-presence
+    if: needs.panel-presence.outputs.has_panel == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -52,6 +74,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 9
           run_install: false
 
       - name: Setup Node.js
