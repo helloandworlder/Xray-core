@@ -1,0 +1,33 @@
+services:
+  xray-server:
+    build:
+      context: ../..
+      dockerfile: testing/rate-limit/Dockerfile.xray
+    container_name: xray-rate-server
+    command: ["run", "-c", "/etc/xray/server.json"]
+    volumes:
+      - ./config/server.json:/etc/xray/server.json:ro
+
+  xray-client:
+    build:
+      context: ../..
+      dockerfile: testing/rate-limit/Dockerfile.xray
+    container_name: xray-rate-client
+    depends_on:
+      - xray-server
+    command: ["run", "-c", "/etc/xray/client.json"]
+    volumes:
+      - ./config/client.json:/etc/xray/client.json:ro
+
+  traffic:
+    image: python:3.12-alpine
+    container_name: xray-rate-traffic
+    command: ["python", "/app/traffic_server.py"]
+    volumes:
+      - ./traffic_server.py:/app/traffic_server.py:ro
+
+  grpcurl:
+    image: fullstorydev/grpcurl:v1.9.3
+    profiles: ["tools"]
+    volumes:
+      - ../../app/userratelimit/command:/protos/userratelimit:ro

@@ -1,0 +1,39 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "api": {
+    "tag": "api",
+    "listen": "0.0.0.0:10085",
+    "services": [
+      "StatsService",
+      "UserRateLimitService"
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "vmess-in",
+      "listen": "0.0.0.0",
+      "port": 10086,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "11111111-1111-1111-1111-111111111111",
+            "alterId": 0,
+            "email": "user@test.local"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    }
+  ]
+}

@@ -10,7 +10,7 @@ import (
 )
 
 type byteRateLimiter struct {
-	rate  int64
+	rate  float64
 	burst float64
 
 	mu     sync.Mutex
@@ -22,7 +22,11 @@ func newByteRateLimiter(bps int64) *byteRateLimiter {
 	if bps <= 0 {
 		return nil
 	}
-	return &byteRateLimiter{rate: bps, burst: float64(bps), tokens: float64(bps), last: time.Now()}
+	rate := float64(bps) / 8.0
+	if rate <= 0 {
+		return nil
+	}
+	return &byteRateLimiter{rate: rate, burst: rate, tokens: rate, last: time.Now()}
 }
 
 func (l *byteRateLimiter) waitBytes(n int) {
@@ -36,7 +40,7 @@ func (l *byteRateLimiter) waitBytes(n int) {
 		l.tokens = l.burst
 	}
 	if now.After(l.last) {
-		l.tokens += now.Sub(l.last).Seconds() * float64(l.rate)
+		l.tokens += now.Sub(l.last).Seconds() * l.rate
 		if l.tokens > l.burst {
 			l.tokens = l.burst
 		}
@@ -49,7 +53,7 @@ func (l *byteRateLimiter) waitBytes(n int) {
 		return
 	}
 	deficit := required - l.tokens
-	wait := time.Duration(deficit / float64(l.rate) * float64(time.Second))
+	wait := time.Duration(deficit / l.rate * float64(time.Second))
 	if wait < 0 {
 		wait = 0
 	}
