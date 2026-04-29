@@ -32,3 +32,13 @@ func (sc *ServerConfig) HasAccount(username, password string) bool {
 	}
 	return p == password
 }
+
+func (sc *ServerConfig) RuntimeEmail(username string) string {
+	if sc.AccountEmails == nil {
+		return username
+	}
+	if email := sc.AccountEmails[username]; email != "" {
+		return email
+	}
+	return username
+}

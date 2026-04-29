@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/xtls/xray-core/common"
@@ -31,6 +32,7 @@ import (
 type Server struct {
 	config        *ServerConfig
 	policyManager policy.Manager
+	mu            sync.RWMutex
 }
 
 // NewServer creates a new HTTP inbound handler.
@@ -48,6 +50,90 @@ func (s *Server) policy() policy.Session {
 	config := s.config
 	p := s.policyManager.ForLevel(config.UserLevel)
 	return p
+}
+
+func (s *Server) authenticate(username, password string) (string, bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	if !s.config.HasAccount(username, password) {
+		return "", false
+	}
+	return s.config.RuntimeEmail(username), true
+}
+
+func (s *Server) AddUser(_ context.Context, user *protocol.MemoryUser) error {
+	account, ok := user.Account.(*Account)
+	if !ok {
+		return errors.New("not a HTTP account")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.config.Accounts == nil {
+		s.config.Accounts = map[string]string{}
+	}
+	if s.config.AccountEmails == nil {
+		s.config.AccountEmails = map[string]string{}
+	}
+	s.config.Accounts[account.Username] = account.Password
+	s.config.AccountEmails[account.Username] = user.Email
+	return nil
+}
+
+func (s *Server) RemoveUser(_ context.Context, email string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for username, runtimeEmail := range s.config.AccountEmails {
+		if runtimeEmail == email {
+			delete(s.config.AccountEmails, username)
+			delete(s.config.Accounts, username)
+			return nil
+		}
+	}
+	delete(s.config.Accounts, email)
+	delete(s.config.AccountEmails, email)
+	return nil
+}
+
+func (s *Server) GetUser(_ context.Context, email string) *protocol.MemoryUser {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	for username, runtimeEmail := range s.config.AccountEmails {
+		if runtimeEmail == email {
+			return &protocol.MemoryUser{
+				Account: &Account{Username: username, Password: s.config.Accounts[username]},
+				Email:   runtimeEmail,
+				Level:   s.config.UserLevel,
+			}
+		}
+	}
+	if password, ok := s.config.Accounts[email]; ok {
+		return &protocol.MemoryUser{
+			Account: &Account{Username: email, Password: password},
+			Email:   email,
+			Level:   s.config.UserLevel,
+		}
+	}
+	return nil
+}
+
+func (s *Server) GetUsers(context.Context) []*protocol.MemoryUser {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	users := make([]*protocol.MemoryUser, 0, len(s.config.Accounts))
+	for username, password := range s.config.Accounts {
+		users = append(users, &protocol.MemoryUser{
+			Account: &Account{Username: username, Password: password},
+			Email:   s.config.RuntimeEmail(username),
+			Level:   s.config.UserLevel,
+		})
+	}
+	return users
+}
+
+func (s *Server) GetUsersCount(context.Context) int64 {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return int64(len(s.config.Accounts))
 }
 
 // Network implements proxy.Inbound.
@@ -124,11 +210,12 @@ Start:
 
 	if len(s.config.Accounts) > 0 {
 		user, pass, ok := parseBasicAuth(request.Header.Get("Proxy-Authorization"))
-		if !ok || !s.config.HasAccount(user, pass) {
+		email, authenticated := s.authenticate(user, pass)
+		if !ok || !authenticated {
 			return common.Error2(conn.Write([]byte("HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm=\"proxy\"\r\n\r\n")))
 		}
 		if inbound != nil {
-			inbound.User.Email = user
+			inbound.User.Email = email
 		}
 	}
 

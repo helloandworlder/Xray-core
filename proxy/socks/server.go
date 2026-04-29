@@ -4,6 +4,7 @@ import (
 	"context"
 	goerrors "errors"
 	"io"
+	"sync"
 	"time"
 
 	"github.com/xtls/xray-core/common"
@@ -31,6 +32,7 @@ type Server struct {
 	cone          bool
 	udpFilter     *UDPFilter
 	httpServer    *http.Server
+	mu            sync.RWMutex
 }
 
 // NewServer creates a new Server object.
@@ -46,10 +48,102 @@ func NewServer(ctx context.Context, config *ServerConfig) (*Server, error) {
 	}
 	if config.AuthType == AuthType_PASSWORD {
 		httpConfig.Accounts = config.Accounts
+		httpConfig.AccountEmails = config.AccountEmails
 		s.udpFilter = new(UDPFilter) // We only use this when auth is enabled
 	}
 	s.httpServer, _ = http.NewServer(ctx, httpConfig)
 	return s, nil
+}
+
+func (s *Server) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
+	account, ok := user.Account.(*Account)
+	if !ok {
+		return errors.New("not a SOCKS account")
+	}
+	s.mu.Lock()
+	if s.config.Accounts == nil {
+		s.config.Accounts = map[string]string{}
+	}
+	if s.config.AccountEmails == nil {
+		s.config.AccountEmails = map[string]string{}
+	}
+	s.config.AuthType = AuthType_PASSWORD
+	s.config.Accounts[account.Username] = account.Password
+	s.config.AccountEmails[account.Username] = user.Email
+	s.mu.Unlock()
+
+	if s.httpServer != nil {
+		return s.httpServer.AddUser(ctx, &protocol.MemoryUser{
+			Account: &http.Account{Username: account.Username, Password: account.Password},
+			Email:   user.Email,
+			Level:   user.Level,
+		})
+	}
+	return nil
+}
+
+func (s *Server) RemoveUser(ctx context.Context, email string) error {
+	s.mu.Lock()
+	for username, runtimeEmail := range s.config.AccountEmails {
+		if runtimeEmail == email {
+			delete(s.config.AccountEmails, username)
+			delete(s.config.Accounts, username)
+			s.mu.Unlock()
+			if s.httpServer != nil {
+				return s.httpServer.RemoveUser(ctx, email)
+			}
+			return nil
+		}
+	}
+	delete(s.config.Accounts, email)
+	delete(s.config.AccountEmails, email)
+	s.mu.Unlock()
+	if s.httpServer != nil {
+		return s.httpServer.RemoveUser(ctx, email)
+	}
+	return nil
+}
+
+func (s *Server) GetUser(_ context.Context, email string) *protocol.MemoryUser {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	for username, runtimeEmail := range s.config.AccountEmails {
+		if runtimeEmail == email {
+			return &protocol.MemoryUser{
+				Account: &Account{Username: username, Password: s.config.Accounts[username]},
+				Email:   runtimeEmail,
+				Level:   s.config.UserLevel,
+			}
+		}
+	}
+	if password, ok := s.config.Accounts[email]; ok {
+		return &protocol.MemoryUser{
+			Account: &Account{Username: email, Password: password},
+			Email:   email,
+			Level:   s.config.UserLevel,
+		}
+	}
+	return nil
+}
+
+func (s *Server) GetUsers(context.Context) []*protocol.MemoryUser {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	users := make([]*protocol.MemoryUser, 0, len(s.config.Accounts))
+	for username, password := range s.config.Accounts {
+		users = append(users, &protocol.MemoryUser{
+			Account: &Account{Username: username, Password: password},
+			Email:   s.config.RuntimeEmail(username),
+			Level:   s.config.UserLevel,
+		})
+	}
+	return users
+}
+
+func (s *Server) GetUsersCount(context.Context) int64 {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return int64(len(s.config.Accounts))
 }
 
 func (s *Server) policy() policy.Session {

@@ -31,3 +31,13 @@ func (c *ServerConfig) HasAccount(username, password string) bool {
 	}
 	return storedPassed == password
 }
+
+func (c *ServerConfig) RuntimeEmail(username string) string {
+	if c.AccountEmails == nil {
+		return username
+	}
+	if email := c.AccountEmails[username]; email != "" {
+		return email
+	}
+	return username
+}

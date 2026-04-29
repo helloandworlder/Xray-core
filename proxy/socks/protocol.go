@@ -159,7 +159,7 @@ func (s *ServerSession) handshake5(nMethod byte, reader io.Reader, writer io.Wri
 
 	request := new(protocol.RequestHeader)
 	if username != "" {
-		request.User = &protocol.MemoryUser{Email: username}
+		request.User = &protocol.MemoryUser{Email: s.config.RuntimeEmail(username)}
 	}
 	switch cmd {
 	case cmdTCPConnect, cmdTorResolve, cmdTorResolvePTR:
