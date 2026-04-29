@@ -71,7 +71,7 @@ func TestSmartFairLimitUsesPriorityAndShortTermConsumption(t *testing.T) {
 	}
 }
 
-func TestAbuseDetectionDisablesAndReportsAccount(t *testing.T) {
+func TestAbuseDetectionReportsWithoutLocalDisable(t *testing.T) {
 	manager := NewManager()
 	now := time.Unix(100, 0)
 	manager.SetPolicy(AccountPolicy{
@@ -89,8 +89,8 @@ func TestAbuseDetectionDisablesAndReportsAccount(t *testing.T) {
 		t.Fatalf("unexpected abuse event: %#v", event)
 	}
 	policy, ok := manager.Policy("acct-1")
-	if !ok || !policy.Disabled {
-		t.Fatalf("policy disabled = %v ok = %v, want disabled", policy.Disabled, ok)
+	if !ok || policy.Disabled {
+		t.Fatalf("policy disabled = %v ok = %v, want cloud-control-only disable", policy.Disabled, ok)
 	}
 }
 

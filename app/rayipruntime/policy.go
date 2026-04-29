@@ -206,9 +206,6 @@ func (m *Manager) RecordTrafficAt(email string, direction Direction, bytes int64
 	if action == "" {
 		action = ReportOnly
 	}
-	if action == DisableAndReport {
-		state.Policy.Disabled = true
-	}
 	return &AbuseEvent{
 		Email:       email,
 		Action:      action,
@@ -231,6 +228,17 @@ func (m *Manager) Usage(email string) Usage {
 		return state.Usage
 	}
 	return Usage{Email: email}
+}
+
+func (m *Manager) ListUsage() []Usage {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	items := make([]Usage, 0, len(m.policies))
+	for _, state := range m.policies {
+		items = append(items, state.Usage)
+	}
+	sort.Slice(items, func(i, j int) bool { return items[i].Email < items[j].Email })
+	return items
 }
 
 func (m *Manager) Digest() Digest {

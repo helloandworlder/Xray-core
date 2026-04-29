@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package rayip.runtime.v1;
+
+option go_package = "github.com/xtls/xray-core/app/rayipruntime/command";
+
+service RuntimeService {
+  rpc GetCapabilities(GetCapabilitiesRequest) returns (GetCapabilitiesResponse);
+  rpc UpsertAccountPolicy(UpsertAccountPolicyRequest) returns (UpsertAccountPolicyResponse);
+  rpc RemoveAccountPolicy(RemoveAccountPolicyRequest) returns (RemoveAccountPolicyResponse);
+  rpc SetUserRateLimit(SetUserRateLimitRequest) returns (SetUserRateLimitResponse);
+  rpc RemoveUserRateLimit(RemoveUserRateLimitRequest) returns (RemoveUserRateLimitResponse);
+  rpc GetUserSpeed(GetUserSpeedRequest) returns (GetUserSpeedResponse);
+  rpc ListUserSpeeds(ListUserSpeedsRequest) returns (ListUserSpeedsResponse);
+  rpc GetDigest(GetDigestRequest) returns (GetDigestResponse);
+}
+
+message GetCapabilitiesRequest {}
+
+message GetCapabilitiesResponse {
+  string extension_abi = 1;
+  repeated string capabilities = 2;
+  Digest digest = 3;
+}
+
+message AccountPolicy {
+  string email = 1;
+  uint64 egress_limit_bps = 2;
+  uint64 ingress_limit_bps = 3;
+  uint32 max_connections = 4;
+  uint32 priority = 5;
+  uint64 generation = 6;
+  bool disabled = 7;
+  uint64 abuse_bytes_per_min = 8;
+  AbuseAction abuse_action = 9;
+}
+
+enum AbuseAction {
+  ABUSE_ACTION_UNSPECIFIED = 0;
+  ABUSE_ACTION_REPORT_ONLY = 1;
+  ABUSE_ACTION_DISABLE_AND_REPORT = 2;
+}
+
+message UpsertAccountPolicyRequest {
+  AccountPolicy policy = 1;
+}
+
+message UpsertAccountPolicyResponse {
+  Digest digest = 1;
+}
+
+message RemoveAccountPolicyRequest {
+  string email = 1;
+}
+
+message RemoveAccountPolicyResponse {
+  Digest digest = 1;
+}
+
+message SetUserRateLimitRequest {
+  string email = 1;
+  uint64 egress_limit_bps = 2;
+  uint64 ingress_limit_bps = 3;
+}
+
+message SetUserRateLimitResponse {
+  AccountPolicy policy = 1;
+  Digest digest = 2;
+}
+
+message RemoveUserRateLimitRequest {
+  string email = 1;
+}
+
+message RemoveUserRateLimitResponse {
+  AccountPolicy policy = 1;
+  Digest digest = 2;
+}
+
+message GetUserSpeedRequest {
+  string email = 1;
+}
+
+message GetUserSpeedResponse {
+  UserSpeed speed = 1;
+}
+
+message ListUserSpeedsRequest {}
+
+message ListUserSpeedsResponse {
+  repeated UserSpeed speeds = 1;
+}
+
+message UserSpeed {
+  string email = 1;
+  uint64 rx_bytes = 2;
+  uint64 tx_bytes = 3;
+  uint64 active_connections = 4;
+  uint64 rx_bytes_per_second = 5;
+  uint64 tx_bytes_per_second = 6;
+}
+
+message GetDigestRequest {}
+
+message GetDigestResponse {
+  Digest digest = 1;
+}
+
+message Digest {
+  uint64 account_count = 1;
+  uint64 enabled_count = 2;
+  uint64 disabled_count = 3;
+  uint64 max_generation = 4;
+  string hash = 5;
+}
+
+message Config {}
