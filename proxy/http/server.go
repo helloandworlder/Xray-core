@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/xtls/xray-core/app/rayipruntime"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -279,10 +280,20 @@ func (s *Server) handleConnect(ctx context.Context, _ *http.Request, buffer *buf
 	if inbound.CanSpliceCopy == 2 {
 		inbound.CanSpliceCopy = 1
 	}
-	if err := dispatcher.DispatchLink(ctx, dest, &transport.Link{
+	link := &transport.Link{
 		Reader: reader,
-		Writer: buf.NewWriter(conn)},
-	); err != nil {
+		Writer: buf.NewWriter(conn),
+	}
+	if inbound != nil && inbound.User != nil && inbound.User.Email != "" {
+		wrapped, release, err := rayipruntime.WrapLink(inbound.User.Email, rayipruntime.DefaultManager(), link, rayipruntime.DirectionIngress, rayipruntime.DirectionEgress)
+		if err != nil {
+			return err
+		}
+		link = wrapped
+		defer release()
+		ctx = rayipruntime.ContextWithWrappedLink(ctx)
+	}
+	if err := dispatcher.DispatchLink(ctx, dest, link); err != nil {
 		return errors.New("failed to dispatch request").Base(err)
 	}
 	return nil

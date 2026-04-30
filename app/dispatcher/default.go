@@ -192,7 +192,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			}
 		}
 	}
-	if user != nil && len(user.Email) > 0 {
+	if user != nil && len(user.Email) > 0 && !rayipruntime.HasWrappedLink(ctx) {
 		if wrapped, release, err := wrapRayIPRuntimeInboundLink(user.Email, d.rayip, inboundLink); err == nil {
 			inboundLink = wrapped
 			context.AfterFunc(ctx, release)
@@ -245,7 +245,7 @@ func WrapLinkWithRayIPRuntime(ctx context.Context, policyManager policy.Manager,
 			}
 		}
 	}
-	if user != nil && len(user.Email) > 0 {
+	if user != nil && len(user.Email) > 0 && !rayipruntime.HasWrappedLink(ctx) {
 		if wrapped, release, err := wrapRayIPRuntimeLink(user.Email, rayipManager, link); err == nil {
 			link = wrapped
 			context.AfterFunc(ctx, release)
