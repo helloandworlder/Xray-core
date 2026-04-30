@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v6.33.4
-// source: app/rayipruntime/command/runtime.proto
+// source: runtime.proto
 
 package command
 
@@ -26,6 +26,8 @@ const (
 	RuntimeService_RemoveUserRateLimit_FullMethodName = "/rayip.runtime.v1.RuntimeService/RemoveUserRateLimit"
 	RuntimeService_GetUserSpeed_FullMethodName        = "/rayip.runtime.v1.RuntimeService/GetUserSpeed"
 	RuntimeService_ListUserSpeeds_FullMethodName      = "/rayip.runtime.v1.RuntimeService/ListUserSpeeds"
+	RuntimeService_SetFairPool_FullMethodName         = "/rayip.runtime.v1.RuntimeService/SetFairPool"
+	RuntimeService_SetFairnessState_FullMethodName    = "/rayip.runtime.v1.RuntimeService/SetFairnessState"
 	RuntimeService_GetDigest_FullMethodName           = "/rayip.runtime.v1.RuntimeService/GetDigest"
 )
 
@@ -40,6 +42,8 @@ type RuntimeServiceClient interface {
 	RemoveUserRateLimit(ctx context.Context, in *RemoveUserRateLimitRequest, opts ...grpc.CallOption) (*RemoveUserRateLimitResponse, error)
 	GetUserSpeed(ctx context.Context, in *GetUserSpeedRequest, opts ...grpc.CallOption) (*GetUserSpeedResponse, error)
 	ListUserSpeeds(ctx context.Context, in *ListUserSpeedsRequest, opts ...grpc.CallOption) (*ListUserSpeedsResponse, error)
+	SetFairPool(ctx context.Context, in *SetFairPoolRequest, opts ...grpc.CallOption) (*SetFairPoolResponse, error)
+	SetFairnessState(ctx context.Context, in *SetFairnessStateRequest, opts ...grpc.CallOption) (*SetFairnessStateResponse, error)
 	GetDigest(ctx context.Context, in *GetDigestRequest, opts ...grpc.CallOption) (*GetDigestResponse, error)
 }
 
@@ -121,6 +125,26 @@ func (c *runtimeServiceClient) ListUserSpeeds(ctx context.Context, in *ListUserS
 	return out, nil
 }
 
+func (c *runtimeServiceClient) SetFairPool(ctx context.Context, in *SetFairPoolRequest, opts ...grpc.CallOption) (*SetFairPoolResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetFairPoolResponse)
+	err := c.cc.Invoke(ctx, RuntimeService_SetFairPool_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *runtimeServiceClient) SetFairnessState(ctx context.Context, in *SetFairnessStateRequest, opts ...grpc.CallOption) (*SetFairnessStateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetFairnessStateResponse)
+	err := c.cc.Invoke(ctx, RuntimeService_SetFairnessState_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *runtimeServiceClient) GetDigest(ctx context.Context, in *GetDigestRequest, opts ...grpc.CallOption) (*GetDigestResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDigestResponse)
@@ -142,6 +166,8 @@ type RuntimeServiceServer interface {
 	RemoveUserRateLimit(context.Context, *RemoveUserRateLimitRequest) (*RemoveUserRateLimitResponse, error)
 	GetUserSpeed(context.Context, *GetUserSpeedRequest) (*GetUserSpeedResponse, error)
 	ListUserSpeeds(context.Context, *ListUserSpeedsRequest) (*ListUserSpeedsResponse, error)
+	SetFairPool(context.Context, *SetFairPoolRequest) (*SetFairPoolResponse, error)
+	SetFairnessState(context.Context, *SetFairnessStateRequest) (*SetFairnessStateResponse, error)
 	GetDigest(context.Context, *GetDigestRequest) (*GetDigestResponse, error)
 	mustEmbedUnimplementedRuntimeServiceServer()
 }
@@ -173,6 +199,12 @@ func (UnimplementedRuntimeServiceServer) GetUserSpeed(context.Context, *GetUserS
 }
 func (UnimplementedRuntimeServiceServer) ListUserSpeeds(context.Context, *ListUserSpeedsRequest) (*ListUserSpeedsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUserSpeeds not implemented")
+}
+func (UnimplementedRuntimeServiceServer) SetFairPool(context.Context, *SetFairPoolRequest) (*SetFairPoolResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetFairPool not implemented")
+}
+func (UnimplementedRuntimeServiceServer) SetFairnessState(context.Context, *SetFairnessStateRequest) (*SetFairnessStateResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetFairnessState not implemented")
 }
 func (UnimplementedRuntimeServiceServer) GetDigest(context.Context, *GetDigestRequest) (*GetDigestResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDigest not implemented")
@@ -324,6 +356,42 @@ func _RuntimeService_ListUserSpeeds_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RuntimeService_SetFairPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFairPoolRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeServiceServer).SetFairPool(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeService_SetFairPool_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeServiceServer).SetFairPool(ctx, req.(*SetFairPoolRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RuntimeService_SetFairnessState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetFairnessStateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RuntimeServiceServer).SetFairnessState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RuntimeService_SetFairnessState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RuntimeServiceServer).SetFairnessState(ctx, req.(*SetFairnessStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RuntimeService_GetDigest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDigestRequest)
 	if err := dec(in); err != nil {
@@ -378,10 +446,18 @@ var RuntimeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RuntimeService_ListUserSpeeds_Handler,
 		},
 		{
+			MethodName: "SetFairPool",
+			Handler:    _RuntimeService_SetFairPool_Handler,
+		},
+		{
+			MethodName: "SetFairnessState",
+			Handler:    _RuntimeService_SetFairnessState_Handler,
+		},
+		{
 			MethodName: "GetDigest",
 			Handler:    _RuntimeService_GetDigest_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "app/rayipruntime/command/runtime.proto",
+	Metadata: "runtime.proto",
 }

@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/xtls/xray-core/app/rayipruntime"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -99,6 +100,7 @@ type DefaultDispatcher struct {
 	policy policy.Manager
 	stats  stats.Manager
 	fdns   dns.FakeDNSEngine
+	rayip  *rayipruntime.Manager
 }
 
 func init() {
@@ -122,6 +124,7 @@ func (d *DefaultDispatcher) Init(config *Config, om outbound.Manager, router rou
 	d.router = router
 	d.policy = pm
 	d.stats = sm
+	d.rayip = rayipruntime.DefaultManager()
 	return nil
 }
 
@@ -189,11 +192,25 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			}
 		}
 	}
+	if user != nil && len(user.Email) > 0 {
+		if wrapped, release, err := wrapRayIPRuntimeInboundLink(user.Email, d.rayip, inboundLink); err == nil {
+			inboundLink = wrapped
+			context.AfterFunc(ctx, release)
+		} else {
+			errors.LogWarningInner(ctx, err, "rayip runtime rejected connection for ", user.Email)
+			common.Close(inboundLink.Writer)
+			common.Interrupt(inboundLink.Reader)
+		}
+	}
 
 	return inboundLink, outboundLink
 }
 
 func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager stats.Manager, link *transport.Link) *transport.Link {
+	return WrapLinkWithRayIPRuntime(ctx, policyManager, statsManager, rayipruntime.DefaultManager(), link)
+}
+
+func WrapLinkWithRayIPRuntime(ctx context.Context, policyManager policy.Manager, statsManager stats.Manager, rayipManager *rayipruntime.Manager, link *transport.Link) *transport.Link {
 	sessionInbound := session.InboundFromContext(ctx)
 	var user *protocol.MemoryUser
 	if sessionInbound != nil {
@@ -226,6 +243,16 @@ func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager st
 				om.AddIP(userIP)
 				context.AfterFunc(ctx, func() { om.RemoveIP(userIP) })
 			}
+		}
+	}
+	if user != nil && len(user.Email) > 0 {
+		if wrapped, release, err := wrapRayIPRuntimeLink(user.Email, rayipManager, link); err == nil {
+			link = wrapped
+			context.AfterFunc(ctx, release)
+		} else {
+			errors.LogWarningInner(ctx, err, "rayip runtime rejected connection for ", user.Email)
+			common.Close(link.Writer)
+			common.Interrupt(link.Reader)
 		}
 	}
 
@@ -352,7 +379,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 		content = new(session.Content)
 		ctx = session.ContextWithContent(ctx, content)
 	}
-	outbound = WrapLink(ctx, d.policy, d.stats, outbound)
+	outbound = WrapLinkWithRayIPRuntime(ctx, d.policy, d.stats, d.rayip, outbound)
 	sniffingRequest := content.SniffingRequest
 	if !sniffingRequest.Enabled {
 		d.routedDispatch(ctx, outbound, destination)

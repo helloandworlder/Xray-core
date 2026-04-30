@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/xtls/xray-core/app/rayipruntime"
 )
@@ -65,5 +66,46 @@ func TestRuntimeServiceRateLimitUpdate(t *testing.T) {
 	}
 	if response2.GetPolicy().GetEgressLimitBps() != 0 || response2.GetPolicy().GetIngressLimitBps() != 0 {
 		t.Fatalf("unexpected policy after remove: %#v", response2.GetPolicy())
+	}
+}
+
+func TestRuntimeServiceFairPoolUpdate(t *testing.T) {
+	manager := rayipruntime.NewManager()
+	manager.SetPolicy(rayipruntime.AccountPolicy{Email: "low", Priority: 1})
+	manager.SetPolicy(rayipruntime.AccountPolicy{Email: "high", Priority: 3})
+	server := NewRuntimeServer(manager)
+
+	response, err := server.SetFairPool(context.Background(), &SetFairPoolRequest{BytesPerSecond: 400})
+	if err != nil {
+		t.Fatalf("SetFairPool() error = %v", err)
+	}
+	if response.GetBytesPerSecond() != 400 {
+		t.Fatalf("bytes_per_second = %d, want 400", response.GetBytesPerSecond())
+	}
+	if share := manager.FairShareBPS("high", rayipruntime.DirectionEgress, time.Unix(100, 0)); share != 300 {
+		t.Fatalf("high fair share = %d, want 300", share)
+	}
+}
+
+func TestRuntimeServiceFairnessStateUpdate(t *testing.T) {
+	manager := rayipruntime.NewManager()
+	manager.SetPolicy(rayipruntime.AccountPolicy{Email: "low", Priority: 1})
+	manager.SetPolicy(rayipruntime.AccountPolicy{Email: "high", Priority: 3})
+	server := NewRuntimeServer(manager)
+
+	_, err := server.SetFairnessState(context.Background(), &SetFairnessStateRequest{
+		EgressPoolBps:       800,
+		IngressPoolBps:      600,
+		WindowSeconds:       300,
+		LossRatePpm:         30000,
+		RetransmitRatePpm:   50000,
+		TargetLossPpm:       5000,
+		TargetRetransmitPpm: 10000,
+	})
+	if err != nil {
+		t.Fatalf("SetFairnessState() error = %v", err)
+	}
+	if share := manager.FairShareBPS("high", rayipruntime.DirectionEgress, time.Unix(100, 0)); share >= 600 {
+		t.Fatalf("high fair share = %d, want congestion-compressed below uncongested share", share)
 	}
 }

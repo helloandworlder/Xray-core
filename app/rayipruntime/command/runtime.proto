@@ -12,6 +12,8 @@ service RuntimeService {
   rpc RemoveUserRateLimit(RemoveUserRateLimitRequest) returns (RemoveUserRateLimitResponse);
   rpc GetUserSpeed(GetUserSpeedRequest) returns (GetUserSpeedResponse);
   rpc ListUserSpeeds(ListUserSpeedsRequest) returns (ListUserSpeedsResponse);
+  rpc SetFairPool(SetFairPoolRequest) returns (SetFairPoolResponse);
+  rpc SetFairnessState(SetFairnessStateRequest) returns (SetFairnessStateResponse);
   rpc GetDigest(GetDigestRequest) returns (GetDigestResponse);
 }
 
@@ -89,6 +91,33 @@ message ListUserSpeedsRequest {}
 
 message ListUserSpeedsResponse {
   repeated UserSpeed speeds = 1;
+}
+
+message SetFairPoolRequest {
+  uint64 bytes_per_second = 1;
+}
+
+message SetFairPoolResponse {
+  uint64 bytes_per_second = 1;
+  Digest digest = 2;
+}
+
+message SetFairnessStateRequest {
+  uint64 egress_pool_bps = 1;
+  uint64 ingress_pool_bps = 2;
+  uint32 window_seconds = 3;
+  uint32 loss_rate_ppm = 4;
+  uint32 retransmit_rate_ppm = 5;
+  uint32 target_loss_ppm = 6;
+  uint32 target_retransmit_ppm = 7;
+  uint64 min_congestion_bps = 8;
+  uint32 rtt_millis = 9;
+}
+
+message SetFairnessStateResponse {
+  uint64 egress_pool_bps = 1;
+  uint64 ingress_pool_bps = 2;
+  Digest digest = 3;
 }
 
 message UserSpeed {

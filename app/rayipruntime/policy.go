@@ -43,6 +43,17 @@ type Usage struct {
 	ActiveConnections int    `json:"active_connections"`
 }
 
+type FairnessState struct {
+	EgressPoolBPS     int64 `json:"egress_pool_bps"`
+	IngressPoolBPS    int64 `json:"ingress_pool_bps"`
+	WindowSeconds     int64 `json:"window_seconds"`
+	LossRatePPM       int64 `json:"loss_rate_ppm"`
+	RetransmitRatePPM int64 `json:"retransmit_rate_ppm"`
+	TargetLossPPM     int64 `json:"target_loss_ppm"`
+	TargetRetransPPM  int64 `json:"target_retrans_ppm"`
+	MinCongestionBPS  int64 `json:"min_congestion_bps"`
+}
+
 type AbuseEvent struct {
 	Email       string      `json:"email"`
 	Action      AbuseAction `json:"action"`
@@ -63,6 +74,25 @@ type Manager struct {
 	mu          sync.Mutex
 	policies    map[string]*policyState
 	fairPoolBPS int64
+	fairness    FairnessState
+}
+
+var defaultManager = NewManager()
+
+func DefaultManager() *Manager {
+	return defaultManager
+}
+
+func (*Manager) Type() interface{} {
+	return (*Manager)(nil)
+}
+
+func (*Manager) Start() error {
+	return nil
+}
+
+func (*Manager) Close() error {
+	return nil
 }
 
 type policyState struct {
@@ -95,6 +125,34 @@ func (m *Manager) SetFairPool(bytesPerSecond int64) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.fairPoolBPS = maxInt64(0, bytesPerSecond)
+	m.fairness.EgressPoolBPS = m.fairPoolBPS
+	m.fairness.IngressPoolBPS = m.fairPoolBPS
+	if m.fairness.WindowSeconds <= 0 {
+		m.fairness.WindowSeconds = 60
+	}
+}
+
+func (m *Manager) SetFairnessState(state FairnessState) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if state.TargetLossPPM <= 0 {
+		state.TargetLossPPM = 5000
+	}
+	if state.TargetRetransPPM <= 0 {
+		state.TargetRetransPPM = 10000
+	}
+	if state.WindowSeconds <= 0 {
+		state.WindowSeconds = 300
+	}
+	state.EgressPoolBPS = maxInt64(0, state.EgressPoolBPS)
+	state.IngressPoolBPS = maxInt64(0, state.IngressPoolBPS)
+	state.LossRatePPM = maxInt64(0, state.LossRatePPM)
+	state.RetransmitRatePPM = maxInt64(0, state.RetransmitRatePPM)
+	state.MinCongestionBPS = maxInt64(0, state.MinCongestionBPS)
+	m.fairness = state
+	if state.EgressPoolBPS == state.IngressPoolBPS {
+		m.fairPoolBPS = state.EgressPoolBPS
+	}
 }
 
 func (m *Manager) SetPolicy(policy AccountPolicy) {
@@ -172,7 +230,7 @@ func (m *Manager) AllowBytesAt(email string, direction Direction, requested int6
 		limit = state.Policy.IngressLimitBPS
 		bucket = &state.Ingress
 	}
-	if limit <= 0 && m.fairPoolBPS > 0 {
+	if limit <= 0 && m.fairnessPoolBPSLocked(direction) > 0 {
 		limit = m.fairShareBPSLocked(email, direction, now)
 		bucket.setLimit(limit)
 	}
@@ -275,19 +333,24 @@ func (m *Manager) requireState(email string) (*policyState, error) {
 	return state, nil
 }
 
-func (m *Manager) fairShareBPSLocked(email string, _ Direction, now time.Time) int64 {
-	if m.fairPoolBPS <= 0 {
+func (m *Manager) fairShareBPSLocked(email string, direction Direction, now time.Time) int64 {
+	pool := m.fairnessPoolBPSLocked(direction)
+	if pool <= 0 {
 		return 0
 	}
+	window := time.Duration(maxInt64(1, m.fairness.WindowSeconds)) * time.Second
 	totalWeight := int64(0)
 	weights := map[string]int64{}
 	for candidate, state := range m.policies {
 		if state.Policy.Disabled {
 			continue
 		}
-		weight := int64(maxInt(1, state.Policy.Priority))
-		if now.Sub(state.MinuteWindow.start) < time.Minute && state.MinuteWindow.bytes > m.fairPoolBPS {
-			weight = maxInt64(1, weight/2)
+		weight := int64(maxInt(1, state.Policy.Priority)) * 1024
+		if !state.MinuteWindow.start.IsZero() && now.Sub(state.MinuteWindow.start) < window {
+			usagePressure := state.MinuteWindow.bytes / maxInt64(1, pool)
+			if usagePressure > 0 {
+				weight = maxInt64(1, weight/(1+usagePressure))
+			}
 		}
 		weights[candidate] = weight
 		totalWeight += weight
@@ -295,7 +358,32 @@ func (m *Manager) fairShareBPSLocked(email string, _ Direction, now time.Time) i
 	if totalWeight <= 0 {
 		return 0
 	}
-	return m.fairPoolBPS * weights[email] / totalWeight
+	return maxInt64(1, pool*weights[email]/totalWeight)
+}
+
+func (m *Manager) fairnessPoolBPSLocked(direction Direction) int64 {
+	pool := m.fairPoolBPS
+	if direction == DirectionEgress && m.fairness.EgressPoolBPS > 0 {
+		pool = m.fairness.EgressPoolBPS
+	}
+	if direction == DirectionIngress && m.fairness.IngressPoolBPS > 0 {
+		pool = m.fairness.IngressPoolBPS
+	}
+	if pool <= 0 {
+		return 0
+	}
+	targetLoss := maxInt64(1, m.fairness.TargetLossPPM)
+	targetRetrans := maxInt64(1, m.fairness.TargetRetransPPM)
+	lossPressure := m.fairness.LossRatePPM / targetLoss
+	retransPressure := m.fairness.RetransmitRatePPM / targetRetrans
+	pressure := maxInt64(lossPressure, retransPressure)
+	if pressure > 0 {
+		pool = pool / (1 + pressure)
+	}
+	if m.fairness.MinCongestionBPS > 0 {
+		pool = maxInt64(m.fairness.MinCongestionBPS, pool)
+	}
+	return pool
 }
 
 func (b *tokenBucket) setLimit(limitBPS int64) {

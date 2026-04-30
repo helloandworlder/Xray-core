@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        v6.33.4
-// source: app/rayipruntime/command/runtime.proto
+// source: runtime.proto
 
 package command
 
@@ -54,11 +54,11 @@ func (x AbuseAction) String() string {
 }
 
 func (AbuseAction) Descriptor() protoreflect.EnumDescriptor {
-	return file_app_rayipruntime_command_runtime_proto_enumTypes[0].Descriptor()
+	return file_runtime_proto_enumTypes[0].Descriptor()
 }
 
 func (AbuseAction) Type() protoreflect.EnumType {
-	return &file_app_rayipruntime_command_runtime_proto_enumTypes[0]
+	return &file_runtime_proto_enumTypes[0]
 }
 
 func (x AbuseAction) Number() protoreflect.EnumNumber {
@@ -67,7 +67,7 @@ func (x AbuseAction) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AbuseAction.Descriptor instead.
 func (AbuseAction) EnumDescriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{0}
+	return file_runtime_proto_rawDescGZIP(), []int{0}
 }
 
 type GetCapabilitiesRequest struct {
@@ -78,7 +78,7 @@ type GetCapabilitiesRequest struct {
 
 func (x *GetCapabilitiesRequest) Reset() {
 	*x = GetCapabilitiesRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[0]
+	mi := &file_runtime_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -90,7 +90,7 @@ func (x *GetCapabilitiesRequest) String() string {
 func (*GetCapabilitiesRequest) ProtoMessage() {}
 
 func (x *GetCapabilitiesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[0]
+	mi := &file_runtime_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -103,7 +103,7 @@ func (x *GetCapabilitiesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCapabilitiesRequest.ProtoReflect.Descriptor instead.
 func (*GetCapabilitiesRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{0}
+	return file_runtime_proto_rawDescGZIP(), []int{0}
 }
 
 type GetCapabilitiesResponse struct {
@@ -117,7 +117,7 @@ type GetCapabilitiesResponse struct {
 
 func (x *GetCapabilitiesResponse) Reset() {
 	*x = GetCapabilitiesResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[1]
+	mi := &file_runtime_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -129,7 +129,7 @@ func (x *GetCapabilitiesResponse) String() string {
 func (*GetCapabilitiesResponse) ProtoMessage() {}
 
 func (x *GetCapabilitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[1]
+	mi := &file_runtime_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -142,7 +142,7 @@ func (x *GetCapabilitiesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCapabilitiesResponse.ProtoReflect.Descriptor instead.
 func (*GetCapabilitiesResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{1}
+	return file_runtime_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetCapabilitiesResponse) GetExtensionAbi() string {
@@ -183,7 +183,7 @@ type AccountPolicy struct {
 
 func (x *AccountPolicy) Reset() {
 	*x = AccountPolicy{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[2]
+	mi := &file_runtime_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -195,7 +195,7 @@ func (x *AccountPolicy) String() string {
 func (*AccountPolicy) ProtoMessage() {}
 
 func (x *AccountPolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[2]
+	mi := &file_runtime_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -208,7 +208,7 @@ func (x *AccountPolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountPolicy.ProtoReflect.Descriptor instead.
 func (*AccountPolicy) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{2}
+	return file_runtime_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AccountPolicy) GetEmail() string {
@@ -283,7 +283,7 @@ type UpsertAccountPolicyRequest struct {
 
 func (x *UpsertAccountPolicyRequest) Reset() {
 	*x = UpsertAccountPolicyRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[3]
+	mi := &file_runtime_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +295,7 @@ func (x *UpsertAccountPolicyRequest) String() string {
 func (*UpsertAccountPolicyRequest) ProtoMessage() {}
 
 func (x *UpsertAccountPolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[3]
+	mi := &file_runtime_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +308,7 @@ func (x *UpsertAccountPolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpsertAccountPolicyRequest.ProtoReflect.Descriptor instead.
 func (*UpsertAccountPolicyRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{3}
+	return file_runtime_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpsertAccountPolicyRequest) GetPolicy() *AccountPolicy {
@@ -327,7 +327,7 @@ type UpsertAccountPolicyResponse struct {
 
 func (x *UpsertAccountPolicyResponse) Reset() {
 	*x = UpsertAccountPolicyResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[4]
+	mi := &file_runtime_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -339,7 +339,7 @@ func (x *UpsertAccountPolicyResponse) String() string {
 func (*UpsertAccountPolicyResponse) ProtoMessage() {}
 
 func (x *UpsertAccountPolicyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[4]
+	mi := &file_runtime_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -352,7 +352,7 @@ func (x *UpsertAccountPolicyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpsertAccountPolicyResponse.ProtoReflect.Descriptor instead.
 func (*UpsertAccountPolicyResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{4}
+	return file_runtime_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpsertAccountPolicyResponse) GetDigest() *Digest {
@@ -371,7 +371,7 @@ type RemoveAccountPolicyRequest struct {
 
 func (x *RemoveAccountPolicyRequest) Reset() {
 	*x = RemoveAccountPolicyRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[5]
+	mi := &file_runtime_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +383,7 @@ func (x *RemoveAccountPolicyRequest) String() string {
 func (*RemoveAccountPolicyRequest) ProtoMessage() {}
 
 func (x *RemoveAccountPolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[5]
+	mi := &file_runtime_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +396,7 @@ func (x *RemoveAccountPolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveAccountPolicyRequest.ProtoReflect.Descriptor instead.
 func (*RemoveAccountPolicyRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{5}
+	return file_runtime_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *RemoveAccountPolicyRequest) GetEmail() string {
@@ -415,7 +415,7 @@ type RemoveAccountPolicyResponse struct {
 
 func (x *RemoveAccountPolicyResponse) Reset() {
 	*x = RemoveAccountPolicyResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[6]
+	mi := &file_runtime_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -427,7 +427,7 @@ func (x *RemoveAccountPolicyResponse) String() string {
 func (*RemoveAccountPolicyResponse) ProtoMessage() {}
 
 func (x *RemoveAccountPolicyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[6]
+	mi := &file_runtime_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -440,7 +440,7 @@ func (x *RemoveAccountPolicyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveAccountPolicyResponse.ProtoReflect.Descriptor instead.
 func (*RemoveAccountPolicyResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{6}
+	return file_runtime_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RemoveAccountPolicyResponse) GetDigest() *Digest {
@@ -461,7 +461,7 @@ type SetUserRateLimitRequest struct {
 
 func (x *SetUserRateLimitRequest) Reset() {
 	*x = SetUserRateLimitRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[7]
+	mi := &file_runtime_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -473,7 +473,7 @@ func (x *SetUserRateLimitRequest) String() string {
 func (*SetUserRateLimitRequest) ProtoMessage() {}
 
 func (x *SetUserRateLimitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[7]
+	mi := &file_runtime_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -486,7 +486,7 @@ func (x *SetUserRateLimitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserRateLimitRequest.ProtoReflect.Descriptor instead.
 func (*SetUserRateLimitRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{7}
+	return file_runtime_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SetUserRateLimitRequest) GetEmail() string {
@@ -520,7 +520,7 @@ type SetUserRateLimitResponse struct {
 
 func (x *SetUserRateLimitResponse) Reset() {
 	*x = SetUserRateLimitResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[8]
+	mi := &file_runtime_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -532,7 +532,7 @@ func (x *SetUserRateLimitResponse) String() string {
 func (*SetUserRateLimitResponse) ProtoMessage() {}
 
 func (x *SetUserRateLimitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[8]
+	mi := &file_runtime_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -545,7 +545,7 @@ func (x *SetUserRateLimitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserRateLimitResponse.ProtoReflect.Descriptor instead.
 func (*SetUserRateLimitResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{8}
+	return file_runtime_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *SetUserRateLimitResponse) GetPolicy() *AccountPolicy {
@@ -571,7 +571,7 @@ type RemoveUserRateLimitRequest struct {
 
 func (x *RemoveUserRateLimitRequest) Reset() {
 	*x = RemoveUserRateLimitRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[9]
+	mi := &file_runtime_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -583,7 +583,7 @@ func (x *RemoveUserRateLimitRequest) String() string {
 func (*RemoveUserRateLimitRequest) ProtoMessage() {}
 
 func (x *RemoveUserRateLimitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[9]
+	mi := &file_runtime_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -596,7 +596,7 @@ func (x *RemoveUserRateLimitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveUserRateLimitRequest.ProtoReflect.Descriptor instead.
 func (*RemoveUserRateLimitRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{9}
+	return file_runtime_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RemoveUserRateLimitRequest) GetEmail() string {
@@ -616,7 +616,7 @@ type RemoveUserRateLimitResponse struct {
 
 func (x *RemoveUserRateLimitResponse) Reset() {
 	*x = RemoveUserRateLimitResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[10]
+	mi := &file_runtime_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -628,7 +628,7 @@ func (x *RemoveUserRateLimitResponse) String() string {
 func (*RemoveUserRateLimitResponse) ProtoMessage() {}
 
 func (x *RemoveUserRateLimitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[10]
+	mi := &file_runtime_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,7 +641,7 @@ func (x *RemoveUserRateLimitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveUserRateLimitResponse.ProtoReflect.Descriptor instead.
 func (*RemoveUserRateLimitResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{10}
+	return file_runtime_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RemoveUserRateLimitResponse) GetPolicy() *AccountPolicy {
@@ -667,7 +667,7 @@ type GetUserSpeedRequest struct {
 
 func (x *GetUserSpeedRequest) Reset() {
 	*x = GetUserSpeedRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[11]
+	mi := &file_runtime_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -679,7 +679,7 @@ func (x *GetUserSpeedRequest) String() string {
 func (*GetUserSpeedRequest) ProtoMessage() {}
 
 func (x *GetUserSpeedRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[11]
+	mi := &file_runtime_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -692,7 +692,7 @@ func (x *GetUserSpeedRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserSpeedRequest.ProtoReflect.Descriptor instead.
 func (*GetUserSpeedRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{11}
+	return file_runtime_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetUserSpeedRequest) GetEmail() string {
@@ -711,7 +711,7 @@ type GetUserSpeedResponse struct {
 
 func (x *GetUserSpeedResponse) Reset() {
 	*x = GetUserSpeedResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[12]
+	mi := &file_runtime_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -723,7 +723,7 @@ func (x *GetUserSpeedResponse) String() string {
 func (*GetUserSpeedResponse) ProtoMessage() {}
 
 func (x *GetUserSpeedResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[12]
+	mi := &file_runtime_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -736,7 +736,7 @@ func (x *GetUserSpeedResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserSpeedResponse.ProtoReflect.Descriptor instead.
 func (*GetUserSpeedResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{12}
+	return file_runtime_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetUserSpeedResponse) GetSpeed() *UserSpeed {
@@ -754,7 +754,7 @@ type ListUserSpeedsRequest struct {
 
 func (x *ListUserSpeedsRequest) Reset() {
 	*x = ListUserSpeedsRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[13]
+	mi := &file_runtime_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -766,7 +766,7 @@ func (x *ListUserSpeedsRequest) String() string {
 func (*ListUserSpeedsRequest) ProtoMessage() {}
 
 func (x *ListUserSpeedsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[13]
+	mi := &file_runtime_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -779,7 +779,7 @@ func (x *ListUserSpeedsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserSpeedsRequest.ProtoReflect.Descriptor instead.
 func (*ListUserSpeedsRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{13}
+	return file_runtime_proto_rawDescGZIP(), []int{13}
 }
 
 type ListUserSpeedsResponse struct {
@@ -791,7 +791,7 @@ type ListUserSpeedsResponse struct {
 
 func (x *ListUserSpeedsResponse) Reset() {
 	*x = ListUserSpeedsResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[14]
+	mi := &file_runtime_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -803,7 +803,7 @@ func (x *ListUserSpeedsResponse) String() string {
 func (*ListUserSpeedsResponse) ProtoMessage() {}
 
 func (x *ListUserSpeedsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[14]
+	mi := &file_runtime_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -816,12 +816,276 @@ func (x *ListUserSpeedsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserSpeedsResponse.ProtoReflect.Descriptor instead.
 func (*ListUserSpeedsResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{14}
+	return file_runtime_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ListUserSpeedsResponse) GetSpeeds() []*UserSpeed {
 	if x != nil {
 		return x.Speeds
+	}
+	return nil
+}
+
+type SetFairPoolRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	BytesPerSecond uint64                 `protobuf:"varint,1,opt,name=bytes_per_second,json=bytesPerSecond,proto3" json:"bytes_per_second,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SetFairPoolRequest) Reset() {
+	*x = SetFairPoolRequest{}
+	mi := &file_runtime_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFairPoolRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFairPoolRequest) ProtoMessage() {}
+
+func (x *SetFairPoolRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_runtime_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFairPoolRequest.ProtoReflect.Descriptor instead.
+func (*SetFairPoolRequest) Descriptor() ([]byte, []int) {
+	return file_runtime_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SetFairPoolRequest) GetBytesPerSecond() uint64 {
+	if x != nil {
+		return x.BytesPerSecond
+	}
+	return 0
+}
+
+type SetFairPoolResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	BytesPerSecond uint64                 `protobuf:"varint,1,opt,name=bytes_per_second,json=bytesPerSecond,proto3" json:"bytes_per_second,omitempty"`
+	Digest         *Digest                `protobuf:"bytes,2,opt,name=digest,proto3" json:"digest,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SetFairPoolResponse) Reset() {
+	*x = SetFairPoolResponse{}
+	mi := &file_runtime_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFairPoolResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFairPoolResponse) ProtoMessage() {}
+
+func (x *SetFairPoolResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_runtime_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFairPoolResponse.ProtoReflect.Descriptor instead.
+func (*SetFairPoolResponse) Descriptor() ([]byte, []int) {
+	return file_runtime_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *SetFairPoolResponse) GetBytesPerSecond() uint64 {
+	if x != nil {
+		return x.BytesPerSecond
+	}
+	return 0
+}
+
+func (x *SetFairPoolResponse) GetDigest() *Digest {
+	if x != nil {
+		return x.Digest
+	}
+	return nil
+}
+
+type SetFairnessStateRequest struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	EgressPoolBps       uint64                 `protobuf:"varint,1,opt,name=egress_pool_bps,json=egressPoolBps,proto3" json:"egress_pool_bps,omitempty"`
+	IngressPoolBps      uint64                 `protobuf:"varint,2,opt,name=ingress_pool_bps,json=ingressPoolBps,proto3" json:"ingress_pool_bps,omitempty"`
+	WindowSeconds       uint32                 `protobuf:"varint,3,opt,name=window_seconds,json=windowSeconds,proto3" json:"window_seconds,omitempty"`
+	LossRatePpm         uint32                 `protobuf:"varint,4,opt,name=loss_rate_ppm,json=lossRatePpm,proto3" json:"loss_rate_ppm,omitempty"`
+	RetransmitRatePpm   uint32                 `protobuf:"varint,5,opt,name=retransmit_rate_ppm,json=retransmitRatePpm,proto3" json:"retransmit_rate_ppm,omitempty"`
+	TargetLossPpm       uint32                 `protobuf:"varint,6,opt,name=target_loss_ppm,json=targetLossPpm,proto3" json:"target_loss_ppm,omitempty"`
+	TargetRetransmitPpm uint32                 `protobuf:"varint,7,opt,name=target_retransmit_ppm,json=targetRetransmitPpm,proto3" json:"target_retransmit_ppm,omitempty"`
+	MinCongestionBps    uint64                 `protobuf:"varint,8,opt,name=min_congestion_bps,json=minCongestionBps,proto3" json:"min_congestion_bps,omitempty"`
+	RttMillis           uint32                 `protobuf:"varint,9,opt,name=rtt_millis,json=rttMillis,proto3" json:"rtt_millis,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *SetFairnessStateRequest) Reset() {
+	*x = SetFairnessStateRequest{}
+	mi := &file_runtime_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFairnessStateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFairnessStateRequest) ProtoMessage() {}
+
+func (x *SetFairnessStateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_runtime_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFairnessStateRequest.ProtoReflect.Descriptor instead.
+func (*SetFairnessStateRequest) Descriptor() ([]byte, []int) {
+	return file_runtime_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *SetFairnessStateRequest) GetEgressPoolBps() uint64 {
+	if x != nil {
+		return x.EgressPoolBps
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetIngressPoolBps() uint64 {
+	if x != nil {
+		return x.IngressPoolBps
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetWindowSeconds() uint32 {
+	if x != nil {
+		return x.WindowSeconds
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetLossRatePpm() uint32 {
+	if x != nil {
+		return x.LossRatePpm
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetRetransmitRatePpm() uint32 {
+	if x != nil {
+		return x.RetransmitRatePpm
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetTargetLossPpm() uint32 {
+	if x != nil {
+		return x.TargetLossPpm
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetTargetRetransmitPpm() uint32 {
+	if x != nil {
+		return x.TargetRetransmitPpm
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetMinCongestionBps() uint64 {
+	if x != nil {
+		return x.MinCongestionBps
+	}
+	return 0
+}
+
+func (x *SetFairnessStateRequest) GetRttMillis() uint32 {
+	if x != nil {
+		return x.RttMillis
+	}
+	return 0
+}
+
+type SetFairnessStateResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	EgressPoolBps  uint64                 `protobuf:"varint,1,opt,name=egress_pool_bps,json=egressPoolBps,proto3" json:"egress_pool_bps,omitempty"`
+	IngressPoolBps uint64                 `protobuf:"varint,2,opt,name=ingress_pool_bps,json=ingressPoolBps,proto3" json:"ingress_pool_bps,omitempty"`
+	Digest         *Digest                `protobuf:"bytes,3,opt,name=digest,proto3" json:"digest,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SetFairnessStateResponse) Reset() {
+	*x = SetFairnessStateResponse{}
+	mi := &file_runtime_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetFairnessStateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetFairnessStateResponse) ProtoMessage() {}
+
+func (x *SetFairnessStateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_runtime_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetFairnessStateResponse.ProtoReflect.Descriptor instead.
+func (*SetFairnessStateResponse) Descriptor() ([]byte, []int) {
+	return file_runtime_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *SetFairnessStateResponse) GetEgressPoolBps() uint64 {
+	if x != nil {
+		return x.EgressPoolBps
+	}
+	return 0
+}
+
+func (x *SetFairnessStateResponse) GetIngressPoolBps() uint64 {
+	if x != nil {
+		return x.IngressPoolBps
+	}
+	return 0
+}
+
+func (x *SetFairnessStateResponse) GetDigest() *Digest {
+	if x != nil {
+		return x.Digest
 	}
 	return nil
 }
@@ -840,7 +1104,7 @@ type UserSpeed struct {
 
 func (x *UserSpeed) Reset() {
 	*x = UserSpeed{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[15]
+	mi := &file_runtime_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -852,7 +1116,7 @@ func (x *UserSpeed) String() string {
 func (*UserSpeed) ProtoMessage() {}
 
 func (x *UserSpeed) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[15]
+	mi := &file_runtime_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -865,7 +1129,7 @@ func (x *UserSpeed) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserSpeed.ProtoReflect.Descriptor instead.
 func (*UserSpeed) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{15}
+	return file_runtime_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *UserSpeed) GetEmail() string {
@@ -918,7 +1182,7 @@ type GetDigestRequest struct {
 
 func (x *GetDigestRequest) Reset() {
 	*x = GetDigestRequest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[16]
+	mi := &file_runtime_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -930,7 +1194,7 @@ func (x *GetDigestRequest) String() string {
 func (*GetDigestRequest) ProtoMessage() {}
 
 func (x *GetDigestRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[16]
+	mi := &file_runtime_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -943,7 +1207,7 @@ func (x *GetDigestRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDigestRequest.ProtoReflect.Descriptor instead.
 func (*GetDigestRequest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{16}
+	return file_runtime_proto_rawDescGZIP(), []int{20}
 }
 
 type GetDigestResponse struct {
@@ -955,7 +1219,7 @@ type GetDigestResponse struct {
 
 func (x *GetDigestResponse) Reset() {
 	*x = GetDigestResponse{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[17]
+	mi := &file_runtime_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -967,7 +1231,7 @@ func (x *GetDigestResponse) String() string {
 func (*GetDigestResponse) ProtoMessage() {}
 
 func (x *GetDigestResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[17]
+	mi := &file_runtime_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -980,7 +1244,7 @@ func (x *GetDigestResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDigestResponse.ProtoReflect.Descriptor instead.
 func (*GetDigestResponse) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{17}
+	return file_runtime_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetDigestResponse) GetDigest() *Digest {
@@ -1003,7 +1267,7 @@ type Digest struct {
 
 func (x *Digest) Reset() {
 	*x = Digest{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[18]
+	mi := &file_runtime_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1015,7 +1279,7 @@ func (x *Digest) String() string {
 func (*Digest) ProtoMessage() {}
 
 func (x *Digest) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[18]
+	mi := &file_runtime_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1028,7 +1292,7 @@ func (x *Digest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Digest.ProtoReflect.Descriptor instead.
 func (*Digest) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{18}
+	return file_runtime_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *Digest) GetAccountCount() uint64 {
@@ -1074,7 +1338,7 @@ type Config struct {
 
 func (x *Config) Reset() {
 	*x = Config{}
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[19]
+	mi := &file_runtime_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1086,7 +1350,7 @@ func (x *Config) String() string {
 func (*Config) ProtoMessage() {}
 
 func (x *Config) ProtoReflect() protoreflect.Message {
-	mi := &file_app_rayipruntime_command_runtime_proto_msgTypes[19]
+	mi := &file_runtime_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1099,14 +1363,14 @@ func (x *Config) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Config.ProtoReflect.Descriptor instead.
 func (*Config) Descriptor() ([]byte, []int) {
-	return file_app_rayipruntime_command_runtime_proto_rawDescGZIP(), []int{19}
+	return file_runtime_proto_rawDescGZIP(), []int{23}
 }
 
-var File_app_rayipruntime_command_runtime_proto protoreflect.FileDescriptor
+var File_runtime_proto protoreflect.FileDescriptor
 
-const file_app_rayipruntime_command_runtime_proto_rawDesc = "" +
+const file_runtime_proto_rawDesc = "" +
 	"\n" +
-	"&app/rayipruntime/command/runtime.proto\x12\x10rayip.runtime.v1\"\x18\n" +
+	"\rruntime.proto\x12\x10rayip.runtime.v1\"\x18\n" +
 	"\x16GetCapabilitiesRequest\"\x94\x01\n" +
 	"\x17GetCapabilitiesResponse\x12#\n" +
 	"\rextension_abi\x18\x01 \x01(\tR\fextensionAbi\x12\"\n" +
@@ -1150,7 +1414,27 @@ const file_app_rayipruntime_command_runtime_proto_rawDesc = "" +
 	"\x05speed\x18\x01 \x01(\v2\x1b.rayip.runtime.v1.UserSpeedR\x05speed\"\x17\n" +
 	"\x15ListUserSpeedsRequest\"M\n" +
 	"\x16ListUserSpeedsResponse\x123\n" +
-	"\x06speeds\x18\x01 \x03(\v2\x1b.rayip.runtime.v1.UserSpeedR\x06speeds\"\xe4\x01\n" +
+	"\x06speeds\x18\x01 \x03(\v2\x1b.rayip.runtime.v1.UserSpeedR\x06speeds\">\n" +
+	"\x12SetFairPoolRequest\x12(\n" +
+	"\x10bytes_per_second\x18\x01 \x01(\x04R\x0ebytesPerSecond\"q\n" +
+	"\x13SetFairPoolResponse\x12(\n" +
+	"\x10bytes_per_second\x18\x01 \x01(\x04R\x0ebytesPerSecond\x120\n" +
+	"\x06digest\x18\x02 \x01(\v2\x18.rayip.runtime.v1.DigestR\x06digest\"\x8f\x03\n" +
+	"\x17SetFairnessStateRequest\x12&\n" +
+	"\x0fegress_pool_bps\x18\x01 \x01(\x04R\regressPoolBps\x12(\n" +
+	"\x10ingress_pool_bps\x18\x02 \x01(\x04R\x0eingressPoolBps\x12%\n" +
+	"\x0ewindow_seconds\x18\x03 \x01(\rR\rwindowSeconds\x12\"\n" +
+	"\rloss_rate_ppm\x18\x04 \x01(\rR\vlossRatePpm\x12.\n" +
+	"\x13retransmit_rate_ppm\x18\x05 \x01(\rR\x11retransmitRatePpm\x12&\n" +
+	"\x0ftarget_loss_ppm\x18\x06 \x01(\rR\rtargetLossPpm\x122\n" +
+	"\x15target_retransmit_ppm\x18\a \x01(\rR\x13targetRetransmitPpm\x12,\n" +
+	"\x12min_congestion_bps\x18\b \x01(\x04R\x10minCongestionBps\x12\x1d\n" +
+	"\n" +
+	"rtt_millis\x18\t \x01(\rR\trttMillis\"\x9e\x01\n" +
+	"\x18SetFairnessStateResponse\x12&\n" +
+	"\x0fegress_pool_bps\x18\x01 \x01(\x04R\regressPoolBps\x12(\n" +
+	"\x10ingress_pool_bps\x18\x02 \x01(\x04R\x0eingressPoolBps\x120\n" +
+	"\x06digest\x18\x03 \x01(\v2\x18.rayip.runtime.v1.DigestR\x06digest\"\xe4\x01\n" +
 	"\tUserSpeed\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
 	"\brx_bytes\x18\x02 \x01(\x04R\arxBytes\x12\x19\n" +
@@ -1171,7 +1455,7 @@ const file_app_rayipruntime_command_runtime_proto_rawDesc = "" +
 	"\vAbuseAction\x12\x1c\n" +
 	"\x18ABUSE_ACTION_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18ABUSE_ACTION_REPORT_ONLY\x10\x01\x12#\n" +
-	"\x1fABUSE_ACTION_DISABLE_AND_REPORT\x10\x022\xd9\x06\n" +
+	"\x1fABUSE_ACTION_DISABLE_AND_REPORT\x10\x022\xa0\b\n" +
 	"\x0eRuntimeService\x12f\n" +
 	"\x0fGetCapabilities\x12(.rayip.runtime.v1.GetCapabilitiesRequest\x1a).rayip.runtime.v1.GetCapabilitiesResponse\x12r\n" +
 	"\x13UpsertAccountPolicy\x12,.rayip.runtime.v1.UpsertAccountPolicyRequest\x1a-.rayip.runtime.v1.UpsertAccountPolicyResponse\x12r\n" +
@@ -1179,24 +1463,26 @@ const file_app_rayipruntime_command_runtime_proto_rawDesc = "" +
 	"\x10SetUserRateLimit\x12).rayip.runtime.v1.SetUserRateLimitRequest\x1a*.rayip.runtime.v1.SetUserRateLimitResponse\x12r\n" +
 	"\x13RemoveUserRateLimit\x12,.rayip.runtime.v1.RemoveUserRateLimitRequest\x1a-.rayip.runtime.v1.RemoveUserRateLimitResponse\x12]\n" +
 	"\fGetUserSpeed\x12%.rayip.runtime.v1.GetUserSpeedRequest\x1a&.rayip.runtime.v1.GetUserSpeedResponse\x12c\n" +
-	"\x0eListUserSpeeds\x12'.rayip.runtime.v1.ListUserSpeedsRequest\x1a(.rayip.runtime.v1.ListUserSpeedsResponse\x12T\n" +
+	"\x0eListUserSpeeds\x12'.rayip.runtime.v1.ListUserSpeedsRequest\x1a(.rayip.runtime.v1.ListUserSpeedsResponse\x12Z\n" +
+	"\vSetFairPool\x12$.rayip.runtime.v1.SetFairPoolRequest\x1a%.rayip.runtime.v1.SetFairPoolResponse\x12i\n" +
+	"\x10SetFairnessState\x12).rayip.runtime.v1.SetFairnessStateRequest\x1a*.rayip.runtime.v1.SetFairnessStateResponse\x12T\n" +
 	"\tGetDigest\x12\".rayip.runtime.v1.GetDigestRequest\x1a#.rayip.runtime.v1.GetDigestResponseB4Z2github.com/xtls/xray-core/app/rayipruntime/commandb\x06proto3"
 
 var (
-	file_app_rayipruntime_command_runtime_proto_rawDescOnce sync.Once
-	file_app_rayipruntime_command_runtime_proto_rawDescData []byte
+	file_runtime_proto_rawDescOnce sync.Once
+	file_runtime_proto_rawDescData []byte
 )
 
-func file_app_rayipruntime_command_runtime_proto_rawDescGZIP() []byte {
-	file_app_rayipruntime_command_runtime_proto_rawDescOnce.Do(func() {
-		file_app_rayipruntime_command_runtime_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_app_rayipruntime_command_runtime_proto_rawDesc), len(file_app_rayipruntime_command_runtime_proto_rawDesc)))
+func file_runtime_proto_rawDescGZIP() []byte {
+	file_runtime_proto_rawDescOnce.Do(func() {
+		file_runtime_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_runtime_proto_rawDesc), len(file_runtime_proto_rawDesc)))
 	})
-	return file_app_rayipruntime_command_runtime_proto_rawDescData
+	return file_runtime_proto_rawDescData
 }
 
-var file_app_rayipruntime_command_runtime_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_app_rayipruntime_command_runtime_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
-var file_app_rayipruntime_command_runtime_proto_goTypes = []any{
+var file_runtime_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_runtime_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_runtime_proto_goTypes = []any{
 	(AbuseAction)(0),                    // 0: rayip.runtime.v1.AbuseAction
 	(*GetCapabilitiesRequest)(nil),      // 1: rayip.runtime.v1.GetCapabilitiesRequest
 	(*GetCapabilitiesResponse)(nil),     // 2: rayip.runtime.v1.GetCapabilitiesResponse
@@ -1213,69 +1499,79 @@ var file_app_rayipruntime_command_runtime_proto_goTypes = []any{
 	(*GetUserSpeedResponse)(nil),        // 13: rayip.runtime.v1.GetUserSpeedResponse
 	(*ListUserSpeedsRequest)(nil),       // 14: rayip.runtime.v1.ListUserSpeedsRequest
 	(*ListUserSpeedsResponse)(nil),      // 15: rayip.runtime.v1.ListUserSpeedsResponse
-	(*UserSpeed)(nil),                   // 16: rayip.runtime.v1.UserSpeed
-	(*GetDigestRequest)(nil),            // 17: rayip.runtime.v1.GetDigestRequest
-	(*GetDigestResponse)(nil),           // 18: rayip.runtime.v1.GetDigestResponse
-	(*Digest)(nil),                      // 19: rayip.runtime.v1.Digest
-	(*Config)(nil),                      // 20: rayip.runtime.v1.Config
+	(*SetFairPoolRequest)(nil),          // 16: rayip.runtime.v1.SetFairPoolRequest
+	(*SetFairPoolResponse)(nil),         // 17: rayip.runtime.v1.SetFairPoolResponse
+	(*SetFairnessStateRequest)(nil),     // 18: rayip.runtime.v1.SetFairnessStateRequest
+	(*SetFairnessStateResponse)(nil),    // 19: rayip.runtime.v1.SetFairnessStateResponse
+	(*UserSpeed)(nil),                   // 20: rayip.runtime.v1.UserSpeed
+	(*GetDigestRequest)(nil),            // 21: rayip.runtime.v1.GetDigestRequest
+	(*GetDigestResponse)(nil),           // 22: rayip.runtime.v1.GetDigestResponse
+	(*Digest)(nil),                      // 23: rayip.runtime.v1.Digest
+	(*Config)(nil),                      // 24: rayip.runtime.v1.Config
 }
-var file_app_rayipruntime_command_runtime_proto_depIdxs = []int32{
-	19, // 0: rayip.runtime.v1.GetCapabilitiesResponse.digest:type_name -> rayip.runtime.v1.Digest
+var file_runtime_proto_depIdxs = []int32{
+	23, // 0: rayip.runtime.v1.GetCapabilitiesResponse.digest:type_name -> rayip.runtime.v1.Digest
 	0,  // 1: rayip.runtime.v1.AccountPolicy.abuse_action:type_name -> rayip.runtime.v1.AbuseAction
 	3,  // 2: rayip.runtime.v1.UpsertAccountPolicyRequest.policy:type_name -> rayip.runtime.v1.AccountPolicy
-	19, // 3: rayip.runtime.v1.UpsertAccountPolicyResponse.digest:type_name -> rayip.runtime.v1.Digest
-	19, // 4: rayip.runtime.v1.RemoveAccountPolicyResponse.digest:type_name -> rayip.runtime.v1.Digest
+	23, // 3: rayip.runtime.v1.UpsertAccountPolicyResponse.digest:type_name -> rayip.runtime.v1.Digest
+	23, // 4: rayip.runtime.v1.RemoveAccountPolicyResponse.digest:type_name -> rayip.runtime.v1.Digest
 	3,  // 5: rayip.runtime.v1.SetUserRateLimitResponse.policy:type_name -> rayip.runtime.v1.AccountPolicy
-	19, // 6: rayip.runtime.v1.SetUserRateLimitResponse.digest:type_name -> rayip.runtime.v1.Digest
+	23, // 6: rayip.runtime.v1.SetUserRateLimitResponse.digest:type_name -> rayip.runtime.v1.Digest
 	3,  // 7: rayip.runtime.v1.RemoveUserRateLimitResponse.policy:type_name -> rayip.runtime.v1.AccountPolicy
-	19, // 8: rayip.runtime.v1.RemoveUserRateLimitResponse.digest:type_name -> rayip.runtime.v1.Digest
-	16, // 9: rayip.runtime.v1.GetUserSpeedResponse.speed:type_name -> rayip.runtime.v1.UserSpeed
-	16, // 10: rayip.runtime.v1.ListUserSpeedsResponse.speeds:type_name -> rayip.runtime.v1.UserSpeed
-	19, // 11: rayip.runtime.v1.GetDigestResponse.digest:type_name -> rayip.runtime.v1.Digest
-	1,  // 12: rayip.runtime.v1.RuntimeService.GetCapabilities:input_type -> rayip.runtime.v1.GetCapabilitiesRequest
-	4,  // 13: rayip.runtime.v1.RuntimeService.UpsertAccountPolicy:input_type -> rayip.runtime.v1.UpsertAccountPolicyRequest
-	6,  // 14: rayip.runtime.v1.RuntimeService.RemoveAccountPolicy:input_type -> rayip.runtime.v1.RemoveAccountPolicyRequest
-	8,  // 15: rayip.runtime.v1.RuntimeService.SetUserRateLimit:input_type -> rayip.runtime.v1.SetUserRateLimitRequest
-	10, // 16: rayip.runtime.v1.RuntimeService.RemoveUserRateLimit:input_type -> rayip.runtime.v1.RemoveUserRateLimitRequest
-	12, // 17: rayip.runtime.v1.RuntimeService.GetUserSpeed:input_type -> rayip.runtime.v1.GetUserSpeedRequest
-	14, // 18: rayip.runtime.v1.RuntimeService.ListUserSpeeds:input_type -> rayip.runtime.v1.ListUserSpeedsRequest
-	17, // 19: rayip.runtime.v1.RuntimeService.GetDigest:input_type -> rayip.runtime.v1.GetDigestRequest
-	2,  // 20: rayip.runtime.v1.RuntimeService.GetCapabilities:output_type -> rayip.runtime.v1.GetCapabilitiesResponse
-	5,  // 21: rayip.runtime.v1.RuntimeService.UpsertAccountPolicy:output_type -> rayip.runtime.v1.UpsertAccountPolicyResponse
-	7,  // 22: rayip.runtime.v1.RuntimeService.RemoveAccountPolicy:output_type -> rayip.runtime.v1.RemoveAccountPolicyResponse
-	9,  // 23: rayip.runtime.v1.RuntimeService.SetUserRateLimit:output_type -> rayip.runtime.v1.SetUserRateLimitResponse
-	11, // 24: rayip.runtime.v1.RuntimeService.RemoveUserRateLimit:output_type -> rayip.runtime.v1.RemoveUserRateLimitResponse
-	13, // 25: rayip.runtime.v1.RuntimeService.GetUserSpeed:output_type -> rayip.runtime.v1.GetUserSpeedResponse
-	15, // 26: rayip.runtime.v1.RuntimeService.ListUserSpeeds:output_type -> rayip.runtime.v1.ListUserSpeedsResponse
-	18, // 27: rayip.runtime.v1.RuntimeService.GetDigest:output_type -> rayip.runtime.v1.GetDigestResponse
-	20, // [20:28] is the sub-list for method output_type
-	12, // [12:20] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	23, // 8: rayip.runtime.v1.RemoveUserRateLimitResponse.digest:type_name -> rayip.runtime.v1.Digest
+	20, // 9: rayip.runtime.v1.GetUserSpeedResponse.speed:type_name -> rayip.runtime.v1.UserSpeed
+	20, // 10: rayip.runtime.v1.ListUserSpeedsResponse.speeds:type_name -> rayip.runtime.v1.UserSpeed
+	23, // 11: rayip.runtime.v1.SetFairPoolResponse.digest:type_name -> rayip.runtime.v1.Digest
+	23, // 12: rayip.runtime.v1.SetFairnessStateResponse.digest:type_name -> rayip.runtime.v1.Digest
+	23, // 13: rayip.runtime.v1.GetDigestResponse.digest:type_name -> rayip.runtime.v1.Digest
+	1,  // 14: rayip.runtime.v1.RuntimeService.GetCapabilities:input_type -> rayip.runtime.v1.GetCapabilitiesRequest
+	4,  // 15: rayip.runtime.v1.RuntimeService.UpsertAccountPolicy:input_type -> rayip.runtime.v1.UpsertAccountPolicyRequest
+	6,  // 16: rayip.runtime.v1.RuntimeService.RemoveAccountPolicy:input_type -> rayip.runtime.v1.RemoveAccountPolicyRequest
+	8,  // 17: rayip.runtime.v1.RuntimeService.SetUserRateLimit:input_type -> rayip.runtime.v1.SetUserRateLimitRequest
+	10, // 18: rayip.runtime.v1.RuntimeService.RemoveUserRateLimit:input_type -> rayip.runtime.v1.RemoveUserRateLimitRequest
+	12, // 19: rayip.runtime.v1.RuntimeService.GetUserSpeed:input_type -> rayip.runtime.v1.GetUserSpeedRequest
+	14, // 20: rayip.runtime.v1.RuntimeService.ListUserSpeeds:input_type -> rayip.runtime.v1.ListUserSpeedsRequest
+	16, // 21: rayip.runtime.v1.RuntimeService.SetFairPool:input_type -> rayip.runtime.v1.SetFairPoolRequest
+	18, // 22: rayip.runtime.v1.RuntimeService.SetFairnessState:input_type -> rayip.runtime.v1.SetFairnessStateRequest
+	21, // 23: rayip.runtime.v1.RuntimeService.GetDigest:input_type -> rayip.runtime.v1.GetDigestRequest
+	2,  // 24: rayip.runtime.v1.RuntimeService.GetCapabilities:output_type -> rayip.runtime.v1.GetCapabilitiesResponse
+	5,  // 25: rayip.runtime.v1.RuntimeService.UpsertAccountPolicy:output_type -> rayip.runtime.v1.UpsertAccountPolicyResponse
+	7,  // 26: rayip.runtime.v1.RuntimeService.RemoveAccountPolicy:output_type -> rayip.runtime.v1.RemoveAccountPolicyResponse
+	9,  // 27: rayip.runtime.v1.RuntimeService.SetUserRateLimit:output_type -> rayip.runtime.v1.SetUserRateLimitResponse
+	11, // 28: rayip.runtime.v1.RuntimeService.RemoveUserRateLimit:output_type -> rayip.runtime.v1.RemoveUserRateLimitResponse
+	13, // 29: rayip.runtime.v1.RuntimeService.GetUserSpeed:output_type -> rayip.runtime.v1.GetUserSpeedResponse
+	15, // 30: rayip.runtime.v1.RuntimeService.ListUserSpeeds:output_type -> rayip.runtime.v1.ListUserSpeedsResponse
+	17, // 31: rayip.runtime.v1.RuntimeService.SetFairPool:output_type -> rayip.runtime.v1.SetFairPoolResponse
+	19, // 32: rayip.runtime.v1.RuntimeService.SetFairnessState:output_type -> rayip.runtime.v1.SetFairnessStateResponse
+	22, // 33: rayip.runtime.v1.RuntimeService.GetDigest:output_type -> rayip.runtime.v1.GetDigestResponse
+	24, // [24:34] is the sub-list for method output_type
+	14, // [14:24] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
-func init() { file_app_rayipruntime_command_runtime_proto_init() }
-func file_app_rayipruntime_command_runtime_proto_init() {
-	if File_app_rayipruntime_command_runtime_proto != nil {
+func init() { file_runtime_proto_init() }
+func file_runtime_proto_init() {
+	if File_runtime_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_app_rayipruntime_command_runtime_proto_rawDesc), len(file_app_rayipruntime_command_runtime_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_runtime_proto_rawDesc), len(file_runtime_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   20,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_app_rayipruntime_command_runtime_proto_goTypes,
-		DependencyIndexes: file_app_rayipruntime_command_runtime_proto_depIdxs,
-		EnumInfos:         file_app_rayipruntime_command_runtime_proto_enumTypes,
-		MessageInfos:      file_app_rayipruntime_command_runtime_proto_msgTypes,
+		GoTypes:           file_runtime_proto_goTypes,
+		DependencyIndexes: file_runtime_proto_depIdxs,
+		EnumInfos:         file_runtime_proto_enumTypes,
+		MessageInfos:      file_runtime_proto_msgTypes,
 	}.Build()
-	File_app_rayipruntime_command_runtime_proto = out.File
-	file_app_rayipruntime_command_runtime_proto_goTypes = nil
-	file_app_rayipruntime_command_runtime_proto_depIdxs = nil
+	File_runtime_proto = out.File
+	file_runtime_proto_goTypes = nil
+	file_runtime_proto_depIdxs = nil
 }

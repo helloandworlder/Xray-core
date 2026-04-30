@@ -71,6 +71,31 @@ func TestSmartFairLimitUsesPriorityAndShortTermConsumption(t *testing.T) {
 	}
 }
 
+func TestCongestionAwareFairnessPenalizesHeavyLowPriorityAccounts(t *testing.T) {
+	manager := NewManager()
+	now := time.Unix(100, 0)
+	manager.SetPolicy(AccountPolicy{Email: "low", Priority: 1})
+	manager.SetPolicy(AccountPolicy{Email: "high", Priority: 4})
+	manager.SetFairnessState(FairnessState{
+		EgressPoolBPS:     1000,
+		IngressPoolBPS:    1000,
+		WindowSeconds:     300,
+		LossRatePPM:       30000,
+		RetransmitRatePPM: 50000,
+		TargetLossPPM:     5000,
+	})
+
+	manager.RecordTrafficAt("low", DirectionEgress, 250000, now)
+	lowShare := manager.FairShareBPS("low", DirectionEgress, now.Add(time.Second))
+	highShare := manager.FairShareBPS("high", DirectionEgress, now.Add(time.Second))
+	if lowShare >= highShare {
+		t.Fatalf("low share = %d high share = %d, want low below high under congestion", lowShare, highShare)
+	}
+	if lowShare >= 200 {
+		t.Fatalf("low share = %d, want compressed below 200bps under high loss/retransmit", lowShare)
+	}
+}
+
 func TestAbuseDetectionReportsWithoutLocalDisable(t *testing.T) {
 	manager := NewManager()
 	now := time.Unix(100, 0)

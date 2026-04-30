@@ -19,6 +19,7 @@ var capabilities = []string{
 	"rayip-runtime",
 	"account-rate-limit",
 	"smart-fair-limit",
+	"congestion-aware-fair-limit",
 	"connection-limit",
 	"usage-stats",
 	"runtime-digest",
@@ -103,6 +104,34 @@ func (s *runtimeServer) ListUserSpeeds(context.Context, *ListUserSpeedsRequest) 
 	return response, nil
 }
 
+func (s *runtimeServer) SetFairPool(_ context.Context, request *SetFairPoolRequest) (*SetFairPoolResponse, error) {
+	bytesPerSecond := uintToInt64(request.GetBytesPerSecond())
+	s.manager.SetFairPool(bytesPerSecond)
+	return &SetFairPoolResponse{
+		BytesPerSecond: intToUint64(bytesPerSecond),
+		Digest:         toDigest(s.manager.Digest()),
+	}, nil
+}
+
+func (s *runtimeServer) SetFairnessState(_ context.Context, request *SetFairnessStateRequest) (*SetFairnessStateResponse, error) {
+	state := rayipruntime.FairnessState{
+		EgressPoolBPS:     uintToInt64(request.GetEgressPoolBps()),
+		IngressPoolBPS:    uintToInt64(request.GetIngressPoolBps()),
+		WindowSeconds:     int64(request.GetWindowSeconds()),
+		LossRatePPM:       int64(request.GetLossRatePpm()),
+		RetransmitRatePPM: int64(request.GetRetransmitRatePpm()),
+		TargetLossPPM:     int64(request.GetTargetLossPpm()),
+		TargetRetransPPM:  int64(request.GetTargetRetransmitPpm()),
+		MinCongestionBPS:  uintToInt64(request.GetMinCongestionBps()),
+	}
+	s.manager.SetFairnessState(state)
+	return &SetFairnessStateResponse{
+		EgressPoolBps:  intToUint64(state.EgressPoolBPS),
+		IngressPoolBps: intToUint64(state.IngressPoolBPS),
+		Digest:         toDigest(s.manager.Digest()),
+	}, nil
+}
+
 func (s *runtimeServer) GetDigest(context.Context, *GetDigestRequest) (*GetDigestResponse, error) {
 	return &GetDigestResponse{Digest: toDigest(s.manager.Digest())}, nil
 }
@@ -117,7 +146,7 @@ func (s *service) Register(server *grpc.Server) {
 
 func init() {
 	common.Must(common.RegisterConfig((*Config)(nil), func(context.Context, interface{}) (interface{}, error) {
-		return &service{manager: rayipruntime.NewManager()}, nil
+		return &service{manager: rayipruntime.DefaultManager()}, nil
 	}))
 }
 
