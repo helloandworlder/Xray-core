@@ -7,6 +7,7 @@ option java_package = "com.xray.proxy.http";
 option java_multiple_files = true;
 
 import "common/protocol/server_spec.proto";
+import "common/protocol/user.proto";
 
 message Account {
   string username = 1;
@@ -18,6 +19,7 @@ message ServerConfig {
   map<string, string> accounts = 2;
   bool allow_transparent = 3;
   uint32 user_level = 4;
+  map<string, xray.common.protocol.User> account_users = 5;
 }
 
 message Header {

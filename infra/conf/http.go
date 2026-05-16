@@ -11,8 +11,13 @@ import (
 )
 
 type HTTPAccount struct {
-	Username string `json:"user"`
-	Password string `json:"pass"`
+	Username         string `json:"user"`
+	Password         string `json:"pass"`
+	Email            string `json:"email"`
+	Level            uint32 `json:"level"`
+	UplinkLimitBps   int64  `json:"uplinkLimitBps"`
+	DownlinkLimitBps int64  `json:"downlinkLimitBps"`
+	MaxConnections   int32  `json:"maxConnections"`
 }
 
 func (v *HTTPAccount) Build() *http.Account {
@@ -43,6 +48,27 @@ func (c *HTTPServerConfig) Build() (proto.Message, error) {
 		config.Accounts = make(map[string]string)
 		for _, account := range c.Users {
 			config.Accounts[account.Username] = account.Password
+			if account.Email == "" && account.Level == 0 && account.UplinkLimitBps == 0 && account.DownlinkLimitBps == 0 && account.MaxConnections == 0 {
+				continue
+			}
+			if config.AccountUsers == nil {
+				config.AccountUsers = make(map[string]*protocol.User, len(c.Users))
+			}
+			email := account.Email
+			if email == "" {
+				email = account.Username
+			}
+			level := account.Level
+			if level == 0 {
+				level = c.UserLevel
+			}
+			config.AccountUsers[account.Username] = &protocol.User{
+				Email:            email,
+				Level:            level,
+				UplinkLimitBps:   account.UplinkLimitBps,
+				DownlinkLimitBps: account.DownlinkLimitBps,
+				MaxConnections:   account.MaxConnections,
+			}
 		}
 	}
 

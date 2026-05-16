@@ -140,6 +140,13 @@ func (s *Server) processTCP(ctx context.Context, conn stat.Connection, dispatche
 	}
 	if request.User != nil {
 		inbound.User.Email = request.User.Email
+		if user := s.config.GetAccountUsers()[request.User.Email]; user != nil {
+			inbound.User.Email = user.Email
+			inbound.User.Level = user.Level
+			inbound.User.UplinkLimitBps = user.UplinkLimitBps
+			inbound.User.DownlinkLimitBps = user.DownlinkLimitBps
+			inbound.User.MaxConnections = user.MaxConnections
+		}
 	}
 
 	if err := conn.SetReadDeadline(time.Time{}); err != nil {

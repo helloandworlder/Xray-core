@@ -44,6 +44,48 @@ func TestSocksInboundConfig(t *testing.T) {
 				UserLevel: 1,
 			},
 		},
+		{
+			Input: `{
+				"auth": "password",
+				"accounts": [
+					{
+						"user": "limited-user",
+						"pass": "my-password",
+						"email": "limited@example",
+						"level": 2,
+						"uplinkLimitBps": 1024,
+						"downlinkLimitBps": 2048,
+						"maxConnections": 3
+					}
+				],
+				"udp": false,
+				"ip": "127.0.0.1",
+				"userLevel": 1
+			}`,
+			Parser: loadJSON(creator),
+			Output: &socks.ServerConfig{
+				AuthType: socks.AuthType_PASSWORD,
+				Accounts: map[string]string{
+					"limited-user": "my-password",
+				},
+				AccountUsers: map[string]*protocol.User{
+					"limited-user": {
+						Email:            "limited@example",
+						Level:            2,
+						UplinkLimitBps:   1024,
+						DownlinkLimitBps: 2048,
+						MaxConnections:   3,
+					},
+				},
+				UdpEnabled: false,
+				Address: &net.IPOrDomain{
+					Address: &net.IPOrDomain_Ip{
+						Ip: []byte{127, 0, 0, 1},
+					},
+				},
+				UserLevel: 1,
+			},
+		},
 	})
 }
 

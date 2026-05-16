@@ -129,6 +129,13 @@ Start:
 		}
 		if inbound != nil {
 			inbound.User.Email = user
+			if configuredUser := s.config.GetAccountUsers()[user]; configuredUser != nil {
+				inbound.User.Email = configuredUser.Email
+				inbound.User.Level = configuredUser.Level
+				inbound.User.UplinkLimitBps = configuredUser.UplinkLimitBps
+				inbound.User.DownlinkLimitBps = configuredUser.DownlinkLimitBps
+				inbound.User.MaxConnections = configuredUser.MaxConnections
+			}
 		}
 	}
 

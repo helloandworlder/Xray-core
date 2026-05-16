@@ -98,6 +98,7 @@ type DefaultDispatcher struct {
 	policy policy.Manager
 	stats  stats.Manager
 	fdns   dns.FakeDNSEngine
+	users  userConnectionRegistry
 }
 
 func init() {
@@ -159,6 +160,21 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 	}
 
 	if user != nil && len(user.Email) > 0 {
+		if user.UplinkLimitBps > 0 {
+			inboundLink.Writer = &rateLimitedWriter{
+				ctx:     ctx,
+				limiter: newRateLimiter(user.UplinkLimitBps),
+				Writer:  inboundLink.Writer,
+			}
+		}
+		if user.DownlinkLimitBps > 0 {
+			outboundLink.Writer = &rateLimitedWriter{
+				ctx:     ctx,
+				limiter: newRateLimiter(user.DownlinkLimitBps),
+				Writer:  outboundLink.Writer,
+			}
+		}
+
 		p := d.policy.ForLevel(user.Level)
 		if p.Stats.UserUplink {
 			name := "user>>>" + user.Email + ">>>traffic>>>uplink"
@@ -195,13 +211,29 @@ func WrapLink(ctx context.Context, policyManager policy.Manager, statsManager st
 	}
 
 	link.Reader = &buf.TimeoutWrapperReader{Reader: link.Reader}
+	timeoutReader := link.Reader.(*buf.TimeoutWrapperReader)
 
 	if user != nil && len(user.Email) > 0 {
+		if user.UplinkLimitBps > 0 {
+			link.Reader = &rateLimitedTimeoutReader{
+				ctx:     ctx,
+				limiter: newRateLimiter(user.UplinkLimitBps),
+				Reader:  timeoutReader,
+			}
+		}
+		if user.DownlinkLimitBps > 0 {
+			link.Writer = &rateLimitedWriter{
+				ctx:     ctx,
+				limiter: newRateLimiter(user.DownlinkLimitBps),
+				Writer:  link.Writer,
+			}
+		}
+
 		p := policyManager.ForLevel(user.Level)
 		if p.Stats.UserUplink {
 			name := "user>>>" + user.Email + ">>>traffic>>>uplink"
 			if c, _ := stats.GetOrRegisterCounter(statsManager, name); c != nil {
-				link.Reader.(*buf.TimeoutWrapperReader).Counter = c
+				timeoutReader.Counter = c
 			}
 		}
 		if p.Stats.UserDownlink {
@@ -276,6 +308,11 @@ func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destin
 	ob := outbounds[len(outbounds)-1]
 	ob.OriginalTarget = destination
 	ob.Target = destination
+	if release, err := d.acquireUserConnection(ctx); err != nil {
+		return nil, err
+	} else if release != nil {
+		context.AfterFunc(ctx, release)
+	}
 	content := session.ContentFromContext(ctx)
 	if content == nil {
 		content = new(session.Content)
@@ -333,6 +370,11 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 	ob := outbounds[len(outbounds)-1]
 	ob.OriginalTarget = destination
 	ob.Target = destination
+	if release, err := d.acquireUserConnection(ctx); err != nil {
+		return err
+	} else if release != nil {
+		defer release()
+	}
 	content := session.ContentFromContext(ctx)
 	if content == nil {
 		content = new(session.Content)
@@ -373,6 +415,19 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 	}
 
 	return nil
+}
+
+func (d *DefaultDispatcher) acquireUserConnection(ctx context.Context) (func(), error) {
+	inbound := session.InboundFromContext(ctx)
+	if inbound == nil || inbound.User == nil || inbound.User.MaxConnections <= 0 {
+		return nil, nil
+	}
+	key := userPolicyKey(ctx, inbound.User)
+	release, ok := d.users.acquire(key, inbound.User.MaxConnections)
+	if !ok {
+		return nil, errUserConnectionLimit
+	}
+	return release, nil
 }
 
 func sniffer(ctx context.Context, cReader *cachedReader, metadataOnly bool, network net.Network) (SniffResult, error) {

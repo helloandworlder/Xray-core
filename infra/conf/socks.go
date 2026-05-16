@@ -11,8 +11,13 @@ import (
 )
 
 type SocksAccount struct {
-	Username string `json:"user"`
-	Password string `json:"pass"`
+	Username         string `json:"user"`
+	Password         string `json:"pass"`
+	Email            string `json:"email"`
+	Level            uint32 `json:"level"`
+	UplinkLimitBps   int64  `json:"uplinkLimitBps"`
+	DownlinkLimitBps int64  `json:"downlinkLimitBps"`
+	MaxConnections   int32  `json:"maxConnections"`
 }
 
 func (v *SocksAccount) Build() *socks.Account {
@@ -56,6 +61,27 @@ func (v *SocksServerConfig) Build() (proto.Message, error) {
 		config.Accounts = make(map[string]string, len(v.Users))
 		for _, account := range v.Users {
 			config.Accounts[account.Username] = account.Password
+			if account.Email == "" && account.Level == 0 && account.UplinkLimitBps == 0 && account.DownlinkLimitBps == 0 && account.MaxConnections == 0 {
+				continue
+			}
+			if config.AccountUsers == nil {
+				config.AccountUsers = make(map[string]*protocol.User, len(v.Users))
+			}
+			email := account.Email
+			if email == "" {
+				email = account.Username
+			}
+			level := account.Level
+			if level == 0 {
+				level = v.UserLevel
+			}
+			config.AccountUsers[account.Username] = &protocol.User{
+				Email:            email,
+				Level:            level,
+				UplinkLimitBps:   account.UplinkLimitBps,
+				DownlinkLimitBps: account.DownlinkLimitBps,
+				MaxConnections:   account.MaxConnections,
+			}
 		}
 	}
 
